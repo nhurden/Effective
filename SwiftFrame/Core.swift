@@ -24,8 +24,8 @@ public struct Context {
     var coeffects: CoeffectMap
     var effects: EffectMap
 
-    let queue: [Interceptor]
-    let stack: [Interceptor]
+    var queue: Queue<Interceptor>
+    var stack: Stack<Interceptor>
 }
 
 public struct Interceptor {
@@ -150,7 +150,39 @@ public class Store<S> {
     }
 }
 
-/// Execute an interceptor chain starting from an action
+/*
+ Execute an interceptor chain starting from an action
+ 1. Injects the action into a Context
+ 2. Invokes the interceptors' before functions forwards
+ 3. Invokes the interceptors' after functions backwards
+ */
 func execute<A>(action: A, interceptors: [Interceptor]) {
-    // TODO
+    let cofx = ["action": action]
+    var context = Context(coeffects: cofx, effects: [:], queue: Queue(items: interceptors), stack: Stack.empty())
+
+    // Invoke before functions
+    context = invoke(interceptors: interceptors, context: context) { $0.before }
+
+    // Reverse by putting the stack back into the queue
+    context.queue = Queue(items: context.stack.items.reversed())
+    context.stack = Stack()
+
+    // Invoke after functions
+    context = invoke(interceptors: interceptors, context: context) { $0.after }
+}
+
+func invoke(interceptors: [Interceptor],
+            context: Context,
+            interceptorFunction: (Interceptor) -> ((Context) -> Context)?) -> Context {
+    var context = context
+    while (context.queue.nonEmpty) {
+        if let interceptor = context.queue.peek {
+            context.queue.dequeue()
+            context.stack.push(interceptor)
+            if let newContext = interceptorFunction(interceptor)?(context) {
+                context = newContext
+            }
+        }
+    }
+    return context
 }
