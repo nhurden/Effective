@@ -20,6 +20,25 @@ class SwiftFrameTests: XCTestCase {
         super.tearDown()
     }
     
-    func todoExample() {
+    func testTodoExample() {
+        struct AddTodo: Action {
+            static var name = "AddTodo"
+            let name: String
+        }
+
+        struct AppState {
+            var todos: [String] = []
+        }
+
+        let store = Store(initialState: AppState())
+        store.registerEventState(actionClass: AddTodo.self) { (state, action) in
+            var s = state ?? AppState()
+            s.todos.append(action.name)
+            return s
+        }
+
+        store.dispatch(action: AddTodo(name: "Do Stuff"))
+
+        XCTAssert(store.state.todos.contains("Do Stuff"))
     }
 }
