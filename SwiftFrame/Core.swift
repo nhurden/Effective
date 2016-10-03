@@ -36,11 +36,14 @@ public struct Interceptor {
 
 public class Store<S> {
     let registry: Registry
-    let state: S
+    var state: S
 
     init(initialState: S) {
         registry = Registry()
         state = initialState
+
+        registerBuiltinCoeffects()
+        registerBuiltinEffects()
     }
 
     public func dispatch<A: Action>(action: A) {
@@ -52,9 +55,29 @@ public class Store<S> {
         registry.registerEffectHandler(key: key, handler: handler)
     }
 
+    private func registerBuiltinEffects() {
+        // Update the store state based on the state in the effect map
+        registerEffect(key: "state") { newState in
+            if let newStateS = newState as? S {
+                self.state = newStateS
+            } else {
+                fatalError("Failed to convert state to the store's state type")
+            }
+        }
+    }
+
     // Coeffect Handlers
     public func registerCoeffect(key: String, handler: @escaping CoeffectHandler) {
         registry.registerCoeffectHandler(key: key, handler: handler)
+    }
+
+    private func registerBuiltinCoeffects() {
+        // Add the store state to the coeffect map
+        registerCoeffect(key: "state") { coeffects in
+            var cofx = coeffects
+            cofx["state"] = self.state
+            return cofx
+        }
     }
 
     // Event Handlers
