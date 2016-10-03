@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Registry<A: CaseName, S> {
+class Registry {
     fileprivate var eventHandlers: [String : [Interceptor]]
     fileprivate var effectHandlers: [String : EffectHandler]
     fileprivate var coeffectHandlers: [String : CoeffectHandler]
@@ -21,7 +21,7 @@ class Registry<A: CaseName, S> {
         subscriptionHandlers = [:]
     }
 
-    func eventHandler(action: A) -> [Interceptor]? {
+    func eventHandler<A: CaseName>(action: A) -> [Interceptor]? {
         return eventHandlers[action.nameForCase()]
     }
 

@@ -35,7 +35,7 @@ public struct Interceptor {
 }
 
 public class Store<A: CaseName, S> {
-    let registry: Registry<A, S>
+    let registry: Registry
     let state: S
 
     init(initialState: S) {
