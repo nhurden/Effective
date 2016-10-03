@@ -198,29 +198,27 @@ func execute<A>(action: A, interceptors: [Interceptor]) {
     let cofx = ["action": action]
     var context = Context(coeffects: cofx, effects: [:], queue: Queue(items: interceptors), stack: Stack.empty())
 
+    func invoke(interceptorFunction: (Interceptor) -> ((Context) -> Context)?) -> Context {
+        var context = context
+        while (context.queue.nonEmpty) {
+            if let interceptor = context.queue.peek {
+                context.queue.dequeue()
+                context.stack.push(interceptor)
+                if let newContext = interceptorFunction(interceptor)?(context) {
+                    context = newContext
+                }
+            }
+        }
+        return context
+    }
+
     // Invoke before functions
-    context = invoke(interceptors: interceptors, context: context) { $0.before }
+    context = invoke { $0.before }
 
     // Reverse by putting the stack back into the queue
     context.queue = Queue(items: context.stack.items.reversed())
     context.stack = Stack()
 
     // Invoke after functions
-    context = invoke(interceptors: interceptors, context: context) { $0.after }
-}
-
-func invoke(interceptors: [Interceptor],
-            context: Context,
-            interceptorFunction: (Interceptor) -> ((Context) -> Context)?) -> Context {
-    var context = context
-    while (context.queue.nonEmpty) {
-        if let interceptor = context.queue.peek {
-            context.queue.dequeue()
-            context.stack.push(interceptor)
-            if let newContext = interceptorFunction(interceptor)?(context) {
-                context = newContext
-            }
-        }
-    }
-    return context
+    context = invoke { $0.after }
 }
