@@ -16,8 +16,8 @@ public typealias EventHandler<A, S> = (S?, A) -> S
 public typealias EffectHandler = (Any) -> ()
 public typealias CoeffectHandler = (CoeffectMap) -> CoeffectMap
 
-public protocol CaseName {
-    func nameForCase() -> String
+public protocol Action {
+    static var name: String { get }
 }
 
 public struct Context {
@@ -34,7 +34,7 @@ public struct Interceptor {
     let after: ((Context) -> Context)?
 }
 
-public class Store<A: CaseName, S> {
+public class Store<S> {
     let registry: Registry
     let state: S
 
@@ -43,7 +43,7 @@ public class Store<A: CaseName, S> {
         state = initialState
     }
 
-    public func dispatch(action: A) {
+    public func dispatch<A: Action>(action: A) {
         handleEvent(action: action)
     }
 
@@ -59,20 +59,22 @@ public class Store<A: CaseName, S> {
 
     // Event Handlers
 
-    public func registerEventState(key: String, handler: @escaping EventHandler<A, S>) {
-        registerEventState(key: key, interceptors: [], handler: handler)
+    /// Register an event handler that causes a state update and has no side effects
+    public func registerEventState<A: Action>(actionClass: A.Type, handler: @escaping EventHandler<A, S>) {
+        registerEventState(actionClass: actionClass, interceptors: [], handler: handler)
     }
 
-    public func registerEventState(key: String, interceptors: [Interceptor], handler: @escaping EventHandler<A, S>) {
+    /// Register an event handler that causes a state update and has no side effects
+    public func registerEventState<A: Action>(actionClass: A.Type, interceptors: [Interceptor], handler: @escaping EventHandler<A, S>) {
         let withState = [injectState(), doEffects()] + interceptors + [stateHandlerInterceptor(handler: handler)]
-        registry.registerEventHandler(key: key, interceptors: withState)
+        registry.registerEventHandler(key: actionClass.name, interceptors: withState)
     }
 
-    public func handleEvent(action: A) {
+    public func handleEvent<A: Action>(action: A) {
         if let interceptors = registry.eventHandler(action: action) {
             execute(action: action, interceptors: interceptors)
         } else {
-            let key = action.nameForCase()
+            let key = type(of: action).name
             print("Could not find an event handler for key \(key)")
         }
     }
@@ -114,7 +116,7 @@ public class Store<A: CaseName, S> {
     // Wrapper Interceptors
 
     /// Wraps an EventHandler in an interceptor that sets the state effect to the handler's return value
-    func stateHandlerInterceptor(handler: @escaping EventHandler<A, S>) -> Interceptor {
+    func stateHandlerInterceptor<A: Action>(handler: @escaping EventHandler<A, S>) -> Interceptor {
         return Interceptor(name: "stateHandler", before: { (context: Context) in
             let action = context.coeffects["action"] as! A
             let state = context.coeffects["state"] as? S

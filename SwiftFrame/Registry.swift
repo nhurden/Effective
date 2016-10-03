@@ -21,8 +21,9 @@ class Registry {
         subscriptionHandlers = [:]
     }
 
-    func eventHandler<A: CaseName>(action: A) -> [Interceptor]? {
-        return eventHandlers[action.nameForCase()]
+    func eventHandler<A: Action>(action: A) -> [Interceptor]? {
+        let key = type(of: action).name
+        return eventHandlers[key]
     }
 
     func registerEventHandler(key: String, interceptors: [Interceptor]) {
