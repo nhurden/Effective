@@ -14,6 +14,8 @@
 		E1E949481DA1E9B00019D24E /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = E1E949451DA1E9B00019D24E /* LICENSE */; };
 		E1E949491DA1E9B00019D24E /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = E1E949461DA1E9B00019D24E /* README.md */; };
 		E1E9494B1DA1E9DF0019D24E /* SwiftFrame.podspec in Resources */ = {isa = PBXBuildFile; fileRef = E1E9494A1DA1E9DF0019D24E /* SwiftFrame.podspec */; };
+		E1E9494D1DA1EB9E0019D24E /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E9494C1DA1EB9E0019D24E /* Core.swift */; };
+		E1E949511DA1EBD40019D24E /* Registry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E949501DA1EBD40019D24E /* Registry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +39,8 @@
 		E1E949451DA1E9B00019D24E /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		E1E949461DA1E9B00019D24E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E1E9494A1DA1E9DF0019D24E /* SwiftFrame.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SwiftFrame.podspec; sourceTree = "<group>"; };
+		E1E9494C1DA1EB9E0019D24E /* Core.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
+		E1E949501DA1EBD40019D24E /* Registry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Registry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,10 +68,7 @@
 				E1E9492C1DA1E9920019D24E /* SwiftFrame */,
 				E1E949371DA1E9920019D24E /* SwiftFrameTests */,
 				E1E9492B1DA1E9920019D24E /* Products */,
-				E1E949441DA1E9B00019D24E /* CHANGELOG.md */,
-				E1E949451DA1E9B00019D24E /* LICENSE */,
-				E1E949461DA1E9B00019D24E /* README.md */,
-				E1E9494A1DA1E9DF0019D24E /* SwiftFrame.podspec */,
+				E1E9494F1DA1EBB50019D24E /* Project */,
 			);
 			sourceTree = "<group>";
 		};
@@ -83,8 +84,9 @@
 		E1E9492C1DA1E9920019D24E /* SwiftFrame */ = {
 			isa = PBXGroup;
 			children = (
-				E1E9492D1DA1E9920019D24E /* SwiftFrame.h */,
-				E1E9492E1DA1E9920019D24E /* Info.plist */,
+				E1E9494C1DA1EB9E0019D24E /* Core.swift */,
+				E1E949501DA1EBD40019D24E /* Registry.swift */,
+				E1E9494E1DA1EBA70019D24E /* Support */,
 			);
 			path = SwiftFrame;
 			sourceTree = "<group>";
@@ -96,6 +98,26 @@
 				E1E9493A1DA1E9920019D24E /* Info.plist */,
 			);
 			path = SwiftFrameTests;
+			sourceTree = "<group>";
+		};
+		E1E9494E1DA1EBA70019D24E /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				E1E9492D1DA1E9920019D24E /* SwiftFrame.h */,
+				E1E9492E1DA1E9920019D24E /* Info.plist */,
+			);
+			name = Support;
+			sourceTree = "<group>";
+		};
+		E1E9494F1DA1EBB50019D24E /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				E1E949441DA1E9B00019D24E /* CHANGELOG.md */,
+				E1E949451DA1E9B00019D24E /* LICENSE */,
+				E1E949461DA1E9B00019D24E /* README.md */,
+				E1E9494A1DA1E9DF0019D24E /* SwiftFrame.podspec */,
+			);
+			name = Project;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -210,7 +232,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1E9494D1DA1EB9E0019D24E /* Core.swift in Sources */,
 				E1E949491DA1E9B00019D24E /* README.md in Sources */,
+				E1E949511DA1EBD40019D24E /* Registry.swift in Sources */,
 				E1E949471DA1E9B00019D24E /* CHANGELOG.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -373,6 +397,7 @@
 		E1E949421DA1E9920019D24E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = SwiftFrameTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -385,6 +410,7 @@
 		E1E949431DA1E9920019D24E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = SwiftFrameTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
