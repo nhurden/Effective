@@ -47,11 +47,15 @@ public class Store<S: Equatable> {
         registerBuiltinEffects()
     }
 
+    // MARK: - Dispatch
+
     public func dispatch<A: Action>(action: A) {
         handleEvent(action: action)
     }
 
-    // Effect Handlers
+    // MARK: -
+
+    // MARK: Effect Handlers
     public func registerEffect(key: String, handler: @escaping EffectHandler) {
         registry.registerEffectHandler(key: key, handler: handler)
     }
@@ -67,7 +71,7 @@ public class Store<S: Equatable> {
         }
     }
 
-    // Coeffect Handlers
+    // MARK: Coeffect Handlers
     public func registerCoeffect(key: String, handler: @escaping CoeffectHandler) {
         registry.registerCoeffectHandler(key: key, handler: handler)
     }
@@ -81,7 +85,7 @@ public class Store<S: Equatable> {
         }
     }
 
-    // Event Handlers
+    // MARK: Event Handlers
 
     /// Register an event handler that causes a state update and has no side effects
     public func registerEventState<A: Action>(actionClass: A.Type, handler: @escaping EventHandler<A, S>) {
@@ -90,6 +94,17 @@ public class Store<S: Equatable> {
 
     /// Register an event handler that causes a state update and has no side effects
     public func registerEventState<A: Action>(actionClass: A.Type, interceptors: [Interceptor], handler: @escaping EventHandler<A, S>) {
+        /// Wraps an EventHandler in an interceptor that sets the state effect to the handler's return value
+        func stateHandlerInterceptor<A: Action>(handler: @escaping EventHandler<A, S>) -> Interceptor {
+            return Interceptor(name: "stateHandler", before: { (context: Context) in
+                let action = context.coeffects["action"] as! A
+                let state = context.coeffects["state"] as? S
+                var ctx = context
+                ctx.effects["state"] = handler(state, action)
+                return ctx
+                }, after: nil)
+        }
+
         let withState = [injectState(), doEffects()] + interceptors + [stateHandlerInterceptor(handler: handler)]
         registry.registerEventHandler(key: actionClass.name, interceptors: withState)
     }
@@ -103,7 +118,9 @@ public class Store<S: Equatable> {
         }
     }
 
-    // Basic Interceptors
+    // MARK: -
+
+    // MARK: Basic Interceptors
 
     /// Lookup a coeffect handler and wrap it in a before Interceptor
     public func injectCoeffect(name: String) -> Interceptor {
@@ -136,6 +153,8 @@ public class Store<S: Equatable> {
     public func injectState() -> Interceptor {
         return injectCoeffect(name: "state")
     }
+
+    // MARK: User Interceptors
 
     public var debug: Interceptor {
         return debug { (str: String) in print(str) }
@@ -173,26 +192,16 @@ public class Store<S: Equatable> {
             return context
         })
     }
-
-    // Wrapper Interceptors
-
-    /// Wraps an EventHandler in an interceptor that sets the state effect to the handler's return value
-    func stateHandlerInterceptor<A: Action>(handler: @escaping EventHandler<A, S>) -> Interceptor {
-        return Interceptor(name: "stateHandler", before: { (context: Context) in
-            let action = context.coeffects["action"] as! A
-            let state = context.coeffects["state"] as? S
-            var ctx = context
-            ctx.effects["state"] = handler(state, action)
-            return ctx
-            }, after: nil)
-    }
 }
 
-/*
- Execute an interceptor chain starting from an action
- 1. Injects the action into a Context
- 2. Invokes the interceptors' before functions forwards
- 3. Invokes the interceptors' after functions backwards
+/**
+    Execute an interceptor chain starting from an action
+    1. Injects the action into a Context
+    2. Invokes the interceptors' before functions forwards
+    3. Invokes the interceptors' after functions backwards
+
+    - parameter action: The action to inject into the context
+    - parameter interceptors: The interceptors to execute
  */
 func execute<A>(action: A, interceptors: [Interceptor]) {
     let cofx = ["action": action]
