@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 public typealias StringMap = [String: Any]
 public typealias EffectMap = StringMap
@@ -160,7 +161,7 @@ public class Store<S: Equatable> {
         return debug { (str: String) in print(str) }
     }
 
-    /// An interceptor that logs actions as they are processed and 
+    /// An interceptor that logs actions as they are processed and
     /// indicates changes to the state made by the event handler
     public func debug(logFunction: @escaping LoggingFunction) -> Interceptor {
         return Interceptor(name: "debug", before: { context in
