@@ -205,8 +205,10 @@ public class Store<S: Equatable> {
     - parameter interceptors: The interceptors to execute
  */
 func execute<A>(action: A, interceptors: [Interceptor]) {
-    let cofx = ["action": action]
-    var context = Context(coeffects: cofx, effects: [:], queue: Queue(items: interceptors), stack: Stack.empty())
+    var context = Context(coeffects: ["action": action],
+                          effects: [:],
+                          queue: Queue(items: interceptors),
+                          stack: Stack.empty())
 
     func invoke(interceptorFunction: (Interceptor) -> ((Context) -> Context)?) -> Context {
         var context = context
