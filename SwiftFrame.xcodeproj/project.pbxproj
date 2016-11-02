@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E13DBD631DC9FA5F003285A7 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E13DBD621DC9FA5F003285A7 /* RxSwift.framework */; };
+		E13DBD641DC9FA5F003285A7 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E13DBD621DC9FA5F003285A7 /* RxSwift.framework */; };
+		E13DBD651DC9FA67003285A7 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E13DBD621DC9FA5F003285A7 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E1E949341DA1E9920019D24E /* SwiftFrame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E9492A1DA1E9920019D24E /* SwiftFrame.framework */; };
 		E1E949391DA1E9920019D24E /* SwiftFrameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E949381DA1E9920019D24E /* SwiftFrameTests.swift */; };
 		E1E9493B1DA1E9920019D24E /* SwiftFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = E1E9492D1DA1E9920019D24E /* SwiftFrame.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -15,7 +18,6 @@
 		E1E949531DA1F5B10019D24E /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E949521DA1F5B10019D24E /* Stack.swift */; };
 		E1E949551DA1F5EF0019D24E /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E949541DA1F5EF0019D24E /* Queue.swift */; };
 		E1E949591DA218AB0019D24E /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = E1E949581DA218AB0019D24E /* Cartfile */; };
-		E1E9495D1DA224120019D24E /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1E9495B1DA220530019D24E /* RxSwift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,7 +30,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		E13DBD601DC9F834003285A7 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E13DBD651DC9FA67003285A7 /* RxSwift.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		E13DBD621DC9FA5F003285A7 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
 		E1E9492A1DA1E9920019D24E /* SwiftFrame.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftFrame.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1E9492D1DA1E9920019D24E /* SwiftFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftFrame.h; sourceTree = "<group>"; };
 		E1E9492E1DA1E9920019D24E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -44,7 +61,6 @@
 		E1E949521DA1F5B10019D24E /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		E1E949541DA1F5EF0019D24E /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		E1E949581DA218AB0019D24E /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
-		E1E9495B1DA220530019D24E /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1E9495D1DA224120019D24E /* RxSwift.framework in Frameworks */,
+				E13DBD631DC9FA5F003285A7 /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E13DBD641DC9FA5F003285A7 /* RxSwift.framework in Frameworks */,
 				E1E949341DA1E9920019D24E /* SwiftFrame.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -132,7 +149,7 @@
 		E1E9495A1DA220530019D24E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E1E9495B1DA220530019D24E /* RxSwift.framework */,
+				E13DBD621DC9FA5F003285A7 /* RxSwift.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -159,6 +176,7 @@
 				E1E949261DA1E9920019D24E /* Frameworks */,
 				E1E949271DA1E9920019D24E /* Headers */,
 				E1E949281DA1E9920019D24E /* Resources */,
+				E13DBD5F1DC9F7CF003285A7 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -176,6 +194,7 @@
 				E1E9492F1DA1E9920019D24E /* Sources */,
 				E1E949301DA1E9920019D24E /* Frameworks */,
 				E1E949311DA1E9920019D24E /* Resources */,
+				E13DBD601DC9F834003285A7 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -242,6 +261,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E13DBD5F1DC9F7CF003285A7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/RxSwift.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E1E949251DA1E9920019D24E /* Sources */ = {
@@ -373,9 +409,10 @@
 		E1E9493F1DA1E9920019D24E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -387,6 +424,7 @@
 				INFOPLIST_FILE = SwiftFrame/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = nhurden.SwiftFrame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -400,6 +438,7 @@
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -411,6 +450,7 @@
 				INFOPLIST_FILE = SwiftFrame/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = nhurden.SwiftFrame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -422,9 +462,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = SwiftFrameTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(PROJECT_DIR)/Carthage/Build/Mac @loader_path/../Frameworks @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nhurden.SwiftFrameTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -435,9 +485,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = SwiftFrameTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(PROJECT_DIR)/Carthage/Build/Mac @loader_path/../Frameworks @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nhurden.SwiftFrameTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
