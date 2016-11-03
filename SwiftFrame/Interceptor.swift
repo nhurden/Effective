@@ -8,6 +8,14 @@
 
 import Foundation
 
+public struct Context {
+    var coeffects: CoeffectMap
+    var effects: EffectMap
+
+    var queue: Queue<Interceptor>
+    var stack: Stack<Interceptor>
+}
+
 public struct Interceptor {
     let name: String
     let before: ((Context) -> Context)?

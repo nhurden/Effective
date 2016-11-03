@@ -22,14 +22,6 @@ public protocol Action {
     static var name: String { get }
 }
 
-public struct Context {
-    var coeffects: CoeffectMap
-    var effects: EffectMap
-
-    var queue: Queue<Interceptor>
-    var stack: Stack<Interceptor>
-}
-
 public class Store<S: Equatable> {
     let registry: Registry
     var state: S
