@@ -24,11 +24,13 @@ public protocol Action {
 
 public class Store<S: Equatable> {
     let registry: Registry
-    var state: S
+    var state: Variable<S>
+    var stateObservable: Observable<S>
 
     init(initialState: S) {
         registry = Registry()
-        state = initialState
+        state = Variable(initialState)
+        stateObservable = state.asObservable()
 
         registerBuiltinCoeffects()
         registerBuiltinEffects()

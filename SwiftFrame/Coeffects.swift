@@ -17,7 +17,7 @@ extension Store {
         // Add the store state to the coeffect map
         registerCoeffect(key: "state") { coeffects in
             var cofx = coeffects
-            cofx["state"] = self.state
+            cofx["state"] = self.state.value
             return cofx
         }
     }

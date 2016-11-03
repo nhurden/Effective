@@ -17,7 +17,7 @@ extension Store {
         // Update the store state based on the state in the effect map
         registerEffect(key: "state") { newState in
             if let newStateS = newState as? S {
-                self.state = newStateS
+                self.state.value = newStateS
             } else {
                 fatalError("Failed to convert state to the store's state type")
             }
