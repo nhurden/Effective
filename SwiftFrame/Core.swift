@@ -103,13 +103,4 @@ public class Store<S: Equatable> {
         let withState = [injectState(), doEffects()] + interceptors + [stateHandlerInterceptor(handler: handler)]
         registry.registerEventHandler(key: actionClass.name, interceptors: withState)
     }
-
-    public func handleEvent<A: Action>(action: A) {
-        if let interceptors = registry.eventHandler(action: action) {
-            execute(action: action, interceptors: interceptors)
-        } else {
-            let key = type(of: action).name
-            print("Could not find an event handler for key \(key)")
-        }
-    }
 }

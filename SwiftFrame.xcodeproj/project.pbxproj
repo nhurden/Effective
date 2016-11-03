@@ -11,6 +11,7 @@
 		E102AE801DCB4DFC000CFAEF /* BuiltinInterceptors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E102AE7F1DCB4DFC000CFAEF /* BuiltinInterceptors.swift */; };
 		E102AE821DCB4E47000CFAEF /* Coeffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = E102AE811DCB4E47000CFAEF /* Coeffects.swift */; };
 		E102AE841DCB4E4C000CFAEF /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = E102AE831DCB4E4C000CFAEF /* Effects.swift */; };
+		E102AE861DCB5036000CFAEF /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = E102AE851DCB5036000CFAEF /* Events.swift */; };
 		E13DBD631DC9FA5F003285A7 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E13DBD621DC9FA5F003285A7 /* RxSwift.framework */; };
 		E13DBD641DC9FA5F003285A7 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E13DBD621DC9FA5F003285A7 /* RxSwift.framework */; };
 		E13DBD651DC9FA67003285A7 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E13DBD621DC9FA5F003285A7 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -53,6 +54,7 @@
 		E102AE7F1DCB4DFC000CFAEF /* BuiltinInterceptors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuiltinInterceptors.swift; sourceTree = "<group>"; };
 		E102AE811DCB4E47000CFAEF /* Coeffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coeffects.swift; sourceTree = "<group>"; };
 		E102AE831DCB4E4C000CFAEF /* Effects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
+		E102AE851DCB5036000CFAEF /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		E13DBD621DC9FA5F003285A7 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/Mac/RxSwift.framework; sourceTree = "<group>"; };
 		E1E9492A1DA1E9920019D24E /* SwiftFrame.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftFrame.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1E9492D1DA1E9920019D24E /* SwiftFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftFrame.h; sourceTree = "<group>"; };
@@ -116,10 +118,11 @@
 			isa = PBXGroup;
 			children = (
 				E1E9494C1DA1EB9E0019D24E /* Core.swift */,
-				E102AE7D1DCB4C27000CFAEF /* Interceptor.swift */,
 				E102AE7F1DCB4DFC000CFAEF /* BuiltinInterceptors.swift */,
 				E102AE811DCB4E47000CFAEF /* Coeffects.swift */,
 				E102AE831DCB4E4C000CFAEF /* Effects.swift */,
+				E102AE851DCB5036000CFAEF /* Events.swift */,
+				E102AE7D1DCB4C27000CFAEF /* Interceptor.swift */,
 				E1E949501DA1EBD40019D24E /* Registry.swift */,
 				E1E949521DA1F5B10019D24E /* Stack.swift */,
 				E1E949541DA1F5EF0019D24E /* Queue.swift */,
@@ -302,6 +305,7 @@
 				E102AE801DCB4DFC000CFAEF /* BuiltinInterceptors.swift in Sources */,
 				E102AE7E1DCB4C27000CFAEF /* Interceptor.swift in Sources */,
 				E1E949531DA1F5B10019D24E /* Stack.swift in Sources */,
+				E102AE861DCB5036000CFAEF /* Events.swift in Sources */,
 				E1E949511DA1EBD40019D24E /* Registry.swift in Sources */,
 				E1E949551DA1F5EF0019D24E /* Queue.swift in Sources */,
 			);
