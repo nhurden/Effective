@@ -9,6 +9,21 @@
 import Foundation
 
 extension Store {
+    public func registerEffect(key: String, handler: @escaping EffectHandler) {
+        registry.registerEffectHandler(key: key, handler: handler)
+    }
+
+    func registerBuiltinEffects() {
+        // Update the store state based on the state in the effect map
+        registerEffect(key: "state") { newState in
+            if let newStateS = newState as? S {
+                self.state = newStateS
+            } else {
+                fatalError("Failed to convert state to the store's state type")
+            }
+        }
+    }
+
     /// An interceptor that does all effects in the effects map by calling registered `EffectHandler`s
     public func doEffects() -> Interceptor {
         return Interceptor(name: "doEffects", before: nil, after: { context in

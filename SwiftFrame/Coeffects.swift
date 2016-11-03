@@ -9,6 +9,19 @@
 import Foundation
 
 extension Store {
+    public func registerCoeffect(key: String, handler: @escaping CoeffectHandler) {
+        registry.registerCoeffectHandler(key: key, handler: handler)
+    }
+
+    func registerBuiltinCoeffects() {
+        // Add the store state to the coeffect map
+        registerCoeffect(key: "state") { coeffects in
+            var cofx = coeffects
+            cofx["state"] = self.state
+            return cofx
+        }
+    }
+
     /// Lookup a coeffect handler and wrap it in a before Interceptor
     public func injectCoeffect(name: String) -> Interceptor {
         if let handler = registry.coeffectHandler(key: name) {
