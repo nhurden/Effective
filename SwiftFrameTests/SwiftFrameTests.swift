@@ -16,6 +16,10 @@ struct AddTodo: Action {
     let name: String
 }
 
+struct DoNothing: Action {
+    static var name = "DoNothing"
+}
+
 struct AppState {
     var todos: [String] = []
 }
@@ -34,8 +38,15 @@ class SwiftFrameTests: XCTestCase {
             return s
         }
 
+        store.registerEventState(actionClass: DoNothing.self, interceptors: [store.debug]) { (state, action) in
+            state ?? AppState()
+        }
+
+        store.dispatch(action: AddTodo(name: "Do Stuff"))
+        store.dispatch(action: DoNothing())
         store.dispatch(action: AddTodo(name: "Do Stuff"))
 
         XCTAssert(store.state.value.todos.contains("Do Stuff"))
+        XCTAssert(store.state.value.todos.count == 2)
     }
 }
