@@ -36,7 +36,7 @@ extension Store {
             execute(action: action, interceptors: interceptors)
         } else {
             let key = type(of: action).name
-            print("Could not find an event handler for key \(key)")
+            fatalError("Could not find an event handler for key \(key)")
         }
     }
 }
