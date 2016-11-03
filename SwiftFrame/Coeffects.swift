@@ -9,17 +9,23 @@
 import Foundation
 
 extension Store {
+    // Register a coeffect in the case where the name of the coeffect 
+    // is the same as the desired key in the coeffect map
+    public func registerCoeffect(key: String, value: @escaping @autoclosure () -> Any) {
+        registerCoeffect(key: key) { coeffects in
+            var cofx = coeffects
+            cofx[key] = value()
+            return cofx
+        }
+    }
+
     public func registerCoeffect(key: String, handler: @escaping CoeffectHandler) {
         registry.registerCoeffectHandler(key: key, handler: handler)
     }
 
     func registerBuiltinCoeffects() {
         // Add the store state to the coeffect map
-        registerCoeffect(key: "state") { coeffects in
-            var cofx = coeffects
-            cofx["state"] = self.state.value
-            return cofx
-        }
+        registerCoeffect(key: "state", value: self.state.value)
     }
 
     /// Lookup a coeffect handler and wrap it in a before Interceptor
