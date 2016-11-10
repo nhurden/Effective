@@ -42,7 +42,7 @@ public class Store<S: Equatable> {
         registerBuiltinEffects()
     }
 
-    public func dispatch<A: Action>(action: A) {
+    public func dispatch<A: Action>(_ action: A) {
         handleEvent(action: action)
     }
 }

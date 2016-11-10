@@ -49,9 +49,9 @@ class SwiftFrameTests: XCTestCase {
             return s
         }
 
-        store.dispatch(action: AddTodo(name: "Do Stuff"))
-        store.dispatch(action: DoNothing())
-        store.dispatch(action: AddTodo(name: "Do Stuff"))
+        store.dispatch(AddTodo(name: "Do Stuff"))
+        store.dispatch(DoNothing())
+        store.dispatch(AddTodo(name: "Do Stuff"))
 
         XCTAssert(store.state.value.todos.contains("Do Stuff"))
         XCTAssertEqual(store.state.value.todos.count, 2)
@@ -83,9 +83,9 @@ class SwiftFrameTests: XCTestCase {
             }
         }
 
-        store.dispatch(action: AddTodo(name: "First"))
-        store.dispatch(action: AddTodo(name: "Second"))
-        store.dispatch(action: AddTodo(name: "Third"))
+        store.dispatch(AddTodo(name: "First"))
+        store.dispatch(AddTodo(name: "Second"))
+        store.dispatch(AddTodo(name: "Third"))
 
         XCTAssert(store.state.value.todos.contains("First"))
         XCTAssert(store.state.value.todos.contains("Second"))
