@@ -12,13 +12,11 @@ class Registry {
     fileprivate var eventHandlers: [String : [Interceptor]]
     fileprivate var effectHandlers: [String : EffectHandler]
     fileprivate var coeffectHandlers: [String : CoeffectHandler]
-    fileprivate var subscriptionHandlers: [String : [Interceptor]] // FIXME
 
     init() {
         eventHandlers = [:]
         effectHandlers = [:]
         coeffectHandlers = [:]
-        subscriptionHandlers = [:]
     }
 
     func eventHandler<A: Action>(action: A) -> [Interceptor]? {
@@ -44,13 +42,5 @@ class Registry {
 
     func registerCoeffectHandler(key: String, handler: @escaping CoeffectHandler) {
         coeffectHandlers[key] = handler
-    }
-
-    func subscriptionHandler(key: String) -> [Interceptor]? {
-        return subscriptionHandlers[key]
-    }
-
-    func registerSubscriptionHandler(key: String, handler: [Interceptor]) {
-        subscriptionHandlers[key] = handler
     }
 }
