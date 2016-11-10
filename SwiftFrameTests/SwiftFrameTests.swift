@@ -30,8 +30,9 @@ func ==(lhs: AppState, rhs: AppState) -> Bool {
 }
 
 class SwiftFrameTests: XCTestCase {
-    func testTodoExample() {
+    func todoStore() -> Store<AppState> {
         let store = Store(initialState: AppState())
+
         store.registerEventState(actionClass: AddTodo.self, interceptors: [store.debug]) { (state, action) in
             var s = state ?? AppState()
             s.todos.append(action.name)
@@ -41,6 +42,12 @@ class SwiftFrameTests: XCTestCase {
         store.registerEventState(actionClass: DoNothing.self, interceptors: [store.debug]) { (state, action) in
             state ?? AppState()
         }
+        
+        return store
+    }
+    
+    func testTodoExample() {
+        let store = todoStore()
 
         store.dispatch(action: AddTodo(name: "Do Stuff"))
         store.dispatch(action: DoNothing())
