@@ -19,7 +19,7 @@ extension Store {
                                    handler: @escaping EventHandlerState<A, S>) {
 
         /// Wraps an EventHandler in an interceptor that sets the state effect to the handler's return value
-        func stateHandlerInterceptor<A: Action>(handler: @escaping EventHandlerState<A, S>) -> Interceptor {
+        func stateHandlerInterceptor() -> Interceptor {
             return Interceptor(name: "stateHandler", before: { (context: Context) in
                 let action = context.coeffects["action"] as! A
                 let state = context.coeffects["state"] as? S
@@ -29,7 +29,30 @@ extension Store {
                 }, after: nil)
         }
 
-        let withState = [injectState(), doEffects()] + interceptors + [stateHandlerInterceptor(handler: handler)]
+        let withState = [injectState(), doEffects()] + interceptors + [stateHandlerInterceptor()]
+        registry.registerEventHandler(key: actionClass.name, interceptors: withState)
+    }
+
+    /// Register an event handler that causes effects
+    public func registerEventEffects<A: Action>(actionClass: A.Type, handler: @escaping EventHandlerEffects<A>) {
+        registerEventEffects(actionClass: actionClass, interceptors: [], handler: handler)
+    }
+
+    /// Register an event handler that causes effects
+    public func registerEventEffects<A: Action>(actionClass: A.Type, interceptors: [Interceptor],
+                                   handler: @escaping EventHandlerEffects<A>) {
+
+        /// Wraps an EventHandler in an interceptor that sets the context's effects to the handler's return value
+        func effectsHandlerInterceptor() -> Interceptor {
+            return Interceptor(name: "effectsHandler", before: { (context: Context) in
+                let action = context.coeffects["action"] as! A
+                var ctx = context
+                ctx.effects = handler(context.coeffects, action)
+                return ctx
+                }, after: nil)
+        }
+
+        let withState = [injectState(), doEffects()] + interceptors + [effectsHandlerInterceptor()]
         registry.registerEventHandler(key: actionClass.name, interceptors: withState)
     }
 
