@@ -6,8 +6,6 @@
 //  Copyright © 2016 Nicholas Hurden. All rights reserved.
 //
 
-import Foundation
-
 extension Store {
     public func registerEffect(key: String, handler: @escaping EffectHandler) {
         registry.registerEffectHandler(key: key, handler: handler)

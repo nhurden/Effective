@@ -6,8 +6,6 @@
 //  Copyright © 2016 Nicholas Hurden. All rights reserved.
 //
 
-import Foundation
-
 struct Stack<T> {
     var items = [T]()
 

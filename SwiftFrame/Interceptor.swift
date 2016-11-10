@@ -6,8 +6,6 @@
 //  Copyright © 2016 Nicholas Hurden. All rights reserved.
 //
 
-import Foundation
-
 public struct Context {
     var coeffects: CoeffectMap
     var effects: EffectMap

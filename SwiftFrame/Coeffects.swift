@@ -6,8 +6,6 @@
 //  Copyright © 2016 Nicholas Hurden. All rights reserved.
 //
 
-import Foundation
-
 extension Store {
     // Register a coeffect in the case where the name of the coeffect 
     // is the same as the desired key in the coeffect map

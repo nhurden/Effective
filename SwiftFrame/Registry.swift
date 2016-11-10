@@ -6,8 +6,6 @@
 //  Copyright © 2016 Nicholas Hurden. All rights reserved.
 //
 
-import Foundation
-
 class Registry {
     fileprivate var eventHandlers: [String : [Interceptor]]
     fileprivate var effectHandlers: [String : EffectHandler]

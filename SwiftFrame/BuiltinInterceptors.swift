@@ -6,8 +6,6 @@
 //  Copyright © 2016 Nicholas Hurden. All rights reserved.
 //
 
-import Foundation
-
 // Some of these interceptors depend on the store's registry and state type parameter
 extension Store {
     public var debug: Interceptor {
