@@ -13,9 +13,15 @@ public typealias StringMap = [String: Any]
 public typealias EffectMap = StringMap
 public typealias CoeffectMap = StringMap
 
-public typealias EventHandler<A, S> = (S?, A) -> S
+public typealias ContextUpdater = (Context) -> Context
+
+public typealias EventHandlerState<A, S> = (S?, A) -> S
+public typealias EventHandlerEffects<A> = (CoeffectMap, A) -> EffectMap
+public typealias EventHandlerContext = ContextUpdater
+
 public typealias EffectHandler = (Any) -> ()
 public typealias CoeffectHandler = (CoeffectMap) -> CoeffectMap
+
 public typealias LoggingFunction = (String) -> ()
 
 public protocol Action {

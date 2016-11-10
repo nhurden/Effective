@@ -10,14 +10,16 @@ import Foundation
 
 extension Store {
     /// Register an event handler that causes a state update and has no side effects
-    public func registerEventState<A: Action>(actionClass: A.Type, handler: @escaping EventHandler<A, S>) {
+    public func registerEventState<A: Action>(actionClass: A.Type, handler: @escaping EventHandlerState<A, S>) {
         registerEventState(actionClass: actionClass, interceptors: [], handler: handler)
     }
 
     /// Register an event handler that causes a state update and has no side effects
-    public func registerEventState<A: Action>(actionClass: A.Type, interceptors: [Interceptor], handler: @escaping EventHandler<A, S>) {
+    public func registerEventState<A: Action>(actionClass: A.Type, interceptors: [Interceptor],
+                                   handler: @escaping EventHandlerState<A, S>) {
+
         /// Wraps an EventHandler in an interceptor that sets the state effect to the handler's return value
-        func stateHandlerInterceptor<A: Action>(handler: @escaping EventHandler<A, S>) -> Interceptor {
+        func stateHandlerInterceptor<A: Action>(handler: @escaping EventHandlerState<A, S>) -> Interceptor {
             return Interceptor(name: "stateHandler", before: { (context: Context) in
                 let action = context.coeffects["action"] as! A
                 let state = context.coeffects["state"] as? S

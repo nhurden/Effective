@@ -18,8 +18,8 @@ public struct Context {
 
 public struct Interceptor {
     let name: String
-    let before: ((Context) -> Context)?
-    let after: ((Context) -> Context)?
+    let before: ContextUpdater?
+    let after: ContextUpdater?
 }
 
 /**
@@ -37,7 +37,7 @@ func execute<A>(action: A, interceptors: [Interceptor]) {
                           queue: Queue(items: interceptors),
                           stack: Stack.empty())
 
-    func invoke(interceptorFunction: (Interceptor) -> ((Context) -> Context)?) -> Context {
+    func invoke(interceptorFunction: (Interceptor) -> ContextUpdater?) -> Context {
         var context = context
         while (context.queue.nonEmpty) {
             if let interceptor = context.queue.peek {
