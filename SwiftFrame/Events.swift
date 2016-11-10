@@ -46,6 +46,23 @@ extension Store {
         let withState = [injectState(), doEffects()] + interceptors + [effectsHandlerInterceptor]
         registry.registerEventHandler(key: actionClass.name, interceptors: withState)
     }
+    
+    public func registerEventContext<A: Action>(actionClass: A.Type, handler: @escaping EventHandlerContext) {
+        registerEventContext(actionClass: actionClass, interceptors: [], handler: handler)
+    }
+
+    public func registerEventContext<A: Action>(actionClass: A.Type, interceptors: [Interceptor],
+        handler: @escaping EventHandlerContext) {
+        
+        /// Wraps an EventHandler in an interceptor that sets the context to the handler's return value
+        let contextHandlerInterceptor =
+            Interceptor(name: "contextHandler",
+                        before: handler,
+                        after: nil)
+
+        let withState = [injectState(), doEffects()] + interceptors + [contextHandlerInterceptor]
+        registry.registerEventHandler(key: actionClass.name, interceptors: withState)
+    }
 
     public func handleEvent<A: Action>(action: A) {
         if let interceptors = registry.eventHandler(action: action) {
