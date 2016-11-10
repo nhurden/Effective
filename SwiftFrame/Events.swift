@@ -19,17 +19,12 @@ extension Store {
                                    handler: @escaping EventHandlerState<A, S>) {
 
         /// Wraps an EventHandler in an interceptor that sets the state effect to the handler's return value
-        func stateHandlerInterceptor() -> Interceptor {
-            return Interceptor(name: "stateHandler", before: { (context: Context) in
-                let action = context.coeffects["action"] as! A
-                let state = context.coeffects["state"] as? S
-                var ctx = context
-                ctx.effects["state"] = handler(state, action)
-                return ctx
-                }, after: nil)
-        }
+        let stateHandlerInterceptor =
+            Interceptor(name: "stateHandler",
+                        before: stateBeforeUpdater(handler: handler),
+                        after: nil)
 
-        let withState = [injectState(), doEffects()] + interceptors + [stateHandlerInterceptor()]
+        let withState = [injectState(), doEffects()] + interceptors + [stateHandlerInterceptor]
         registry.registerEventHandler(key: actionClass.name, interceptors: withState)
     }
 
@@ -41,18 +36,14 @@ extension Store {
     /// Register an event handler that causes effects
     public func registerEventEffects<A: Action>(actionClass: A.Type, interceptors: [Interceptor],
                                    handler: @escaping EventHandlerEffects<A>) {
-
+        
         /// Wraps an EventHandler in an interceptor that sets the context's effects to the handler's return value
-        func effectsHandlerInterceptor() -> Interceptor {
-            return Interceptor(name: "effectsHandler", before: { (context: Context) in
-                let action = context.coeffects["action"] as! A
-                var ctx = context
-                ctx.effects = handler(context.coeffects, action)
-                return ctx
-                }, after: nil)
-        }
+        let effectsHandlerInterceptor =
+            Interceptor(name: "effectsHandler",
+                        before: effectsBeforeUpdater(handler: handler),
+                        after: nil)
 
-        let withState = [injectState(), doEffects()] + interceptors + [effectsHandlerInterceptor()]
+        let withState = [injectState(), doEffects()] + interceptors + [effectsHandlerInterceptor]
         registry.registerEventHandler(key: actionClass.name, interceptors: withState)
     }
 
@@ -62,6 +53,22 @@ extension Store {
         } else {
             let key = type(of: action).name
             fatalError("Could not find an event handler for key \(key)")
+        }
+    }
+    
+    private func stateBeforeUpdater<A, S>(handler: @escaping EventHandlerState<A, S>) -> ContextUpdater {
+        return effectsBeforeUpdater() { (coeffects, action: A) in
+            let state = coeffects["state"] as? S
+            return ["state": handler(state, action)]
+        }
+    }
+
+    private func effectsBeforeUpdater<A>(handler: @escaping EventHandlerEffects<A>) -> ContextUpdater {
+        return { context in
+            let action = context.coeffects["action"] as! A
+            var ctx = context
+            ctx.effects = handler(context.coeffects, action)
+            return ctx
         }
     }
 }
