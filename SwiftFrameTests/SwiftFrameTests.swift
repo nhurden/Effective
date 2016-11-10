@@ -47,6 +47,6 @@ class SwiftFrameTests: XCTestCase {
         store.dispatch(action: AddTodo(name: "Do Stuff"))
 
         XCTAssert(store.state.value.todos.contains("Do Stuff"))
-        XCTAssert(store.state.value.todos.count == 2)
+        XCTAssertEqual(store.state.value.todos.count, 2)
     }
 }

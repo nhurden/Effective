@@ -30,7 +30,7 @@ public class Store<S: Equatable> {
     public init(initialState: S) {
         registry = Registry()
         state = Variable(initialState)
-        stateObservable = state.asObservable()
+        stateObservable = state.asObservable().distinctUntilChanged()
 
         registerBuiltinCoeffects()
         registerBuiltinEffects()
