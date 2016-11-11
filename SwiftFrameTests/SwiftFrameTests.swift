@@ -93,4 +93,34 @@ class SwiftFrameTests: XCTestCase {
         XCTAssertEqual(store.state.value.todos.count, 3)
         XCTAssertEqual(actionsAdded, 3)
     }
+
+    func testTodosDeduplicate() {
+        let store = todoStore()
+
+        let dedup = store.enrich { state in
+            let newTodos = Array(Set(state.todos))
+            return AppState(todos: newTodos)
+        }
+        
+        store.registerEventState(actionClass: AddTodo.self, interceptors: [dedup]) { (state, action) in
+            var s = state
+            s.todos.append(action.name)
+            return s
+        }
+
+        store.dispatch(AddTodo(name: "First"))
+        store.dispatch(AddTodo(name: "Second"))
+        store.dispatch(AddTodo(name: "Third"))
+        store.dispatch(AddTodo(name: "First"))
+        store.dispatch(AddTodo(name: "Second"))
+        store.dispatch(AddTodo(name: "Third"))
+        store.dispatch(AddTodo(name: "First"))
+        store.dispatch(AddTodo(name: "Second"))
+        store.dispatch(AddTodo(name: "Third"))
+
+        XCTAssert(store.state.value.todos.contains("First"))
+        XCTAssert(store.state.value.todos.contains("Second"))
+        XCTAssert(store.state.value.todos.contains("Third"))
+        XCTAssertEqual(store.state.value.todos.count, 3)
+    }
 }
