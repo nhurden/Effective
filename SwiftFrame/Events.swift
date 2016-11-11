@@ -73,8 +73,15 @@ extension Store {
     
     private func stateBeforeUpdater<A, S>(handler: @escaping EventHandlerState<A, S>) -> ContextUpdater {
         return effectsBeforeUpdater() { (coeffects, action: A) in
-            let state = coeffects["state"] as? S
-            return ["state": handler(state, action)]
+            guard let state = coeffects["state"] else {
+                fatalError("Attempting to call an event handler that expects state with no state in the coeffect map")
+            }
+            
+            if let state = state as? S {
+                return ["state": handler(state, action)]
+            } else {
+                fatalError("State was not of the store's state type")
+            }
         }
     }
 

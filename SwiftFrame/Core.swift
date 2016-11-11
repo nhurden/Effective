@@ -14,7 +14,7 @@ public typealias CoeffectMap = StringMap
 
 public typealias ContextUpdater = (Context) -> Context
 
-public typealias EventHandlerState<A, S> = (S?, A) -> S
+public typealias EventHandlerState<A, S> = (S, A) -> S
 public typealias EventHandlerEffects<A> = (CoeffectMap, A) -> EffectMap
 public typealias EventHandlerContext = ContextUpdater
 

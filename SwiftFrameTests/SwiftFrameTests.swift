@@ -34,7 +34,7 @@ class SwiftFrameTests: XCTestCase {
         let store = Store(initialState: AppState())
 
         store.registerEventState(actionClass: DoNothing.self) { (state, action) in
-            state ?? AppState()
+            state
         }
         
         return store
@@ -44,7 +44,7 @@ class SwiftFrameTests: XCTestCase {
         let store = todoStore()
 
         store.registerEventState(actionClass: AddTodo.self) { (state, action) in
-            var s = state ?? AppState()
+            var s = state
             s.todos.append(action.name)
             return s
         }
