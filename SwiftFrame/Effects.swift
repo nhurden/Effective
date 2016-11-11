@@ -24,7 +24,7 @@ extension Store {
 
     /// An interceptor that does all effects in the effects map by calling registered `EffectHandler`s
     public func doEffects() -> Interceptor {
-        return Interceptor(name: "doEffects", before: nil, after: { context in
+        return Interceptor.after(name: "doEffects") { context in
             let effects = context.effects
             for (key, value) in effects {
                 if let handler = self.registry.effectHandler(key: key) {
@@ -34,6 +34,6 @@ extension Store {
                 }
             }
             return context
-        })
+        }
     }
 }

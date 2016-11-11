@@ -17,10 +17,8 @@ extension Store {
                                    handler: @escaping EventHandlerState<A, S>) {
 
         /// Wraps an EventHandler in an interceptor that sets the state effect to the handler's return value
-        let stateHandlerInterceptor =
-            Interceptor(name: "stateHandler",
-                        before: stateBeforeUpdater(handler: handler),
-                        after: nil)
+        let stateHandlerInterceptor = Interceptor.before(name: "stateHandler",
+                                                         before: stateBeforeUpdater(handler: handler))
 
         let withState = [injectState(), doEffects()] + interceptors + [stateHandlerInterceptor]
         registry.registerEventHandler(key: actionClass.name, interceptors: withState)
@@ -36,10 +34,8 @@ extension Store {
                                    handler: @escaping EventHandlerEffects<A>) {
         
         /// Wraps an EventHandler in an interceptor that sets the context's effects to the handler's return value
-        let effectsHandlerInterceptor =
-            Interceptor(name: "effectsHandler",
-                        before: effectsBeforeUpdater(handler: handler),
-                        after: nil)
+        let effectsHandlerInterceptor = Interceptor.before(name: "effectsHandler",
+                                                           before: effectsBeforeUpdater(handler: handler))
 
         let withState = [injectState(), doEffects()] + interceptors + [effectsHandlerInterceptor]
         registry.registerEventHandler(key: actionClass.name, interceptors: withState)
@@ -54,9 +50,8 @@ extension Store {
         
         /// Wraps an EventHandler in an interceptor that sets the context to the handler's return value
         let contextHandlerInterceptor =
-            Interceptor(name: "contextHandler",
-                        before: handler,
-                        after: nil)
+            Interceptor.before(name: "contextHandler",
+                               before: handler)
 
         let withState = [injectState(), doEffects()] + interceptors + [contextHandlerInterceptor]
         registry.registerEventHandler(key: actionClass.name, interceptors: withState)

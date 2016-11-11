@@ -18,6 +18,14 @@ public struct Interceptor {
     let name: String
     let before: ContextUpdater?
     let after: ContextUpdater?
+
+    static func before(name: String, before: @escaping ContextUpdater) -> Interceptor {
+        return Interceptor(name: name, before: before, after: nil)
+    }
+
+    static func after(name: String, after: @escaping ContextUpdater) -> Interceptor {
+        return Interceptor(name: name, before: nil, after: after)
+    }
 }
 
 /**

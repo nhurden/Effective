@@ -29,11 +29,11 @@ extension Store {
     /// Lookup a coeffect handler and wrap it in a before Interceptor
     public func injectCoeffect(name: String) -> Interceptor {
         if let handler = registry.coeffectHandler(key: name) {
-            return Interceptor(name: "coeffect: \(name)", before: { context in
+            return Interceptor.before(name: "coeffect: \(name)") { context in
                 var ctx = context
                 ctx.coeffects = handler(context.coeffects)
                 return ctx
-                }, after: nil)
+            }
         } else {
             fatalError("Could not find a coeffect handler for key \(name)")
         }

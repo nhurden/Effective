@@ -47,22 +47,18 @@ extension Store {
 
     /// An interceptor that runs the function given to update the state after the event handler is run
     public func enrich(f: @escaping (S) -> S) -> Interceptor {
-        return Interceptor(
-            name: "enrich",
-            before: nil,
-            after: { context in
-                guard let state = context.effects["state"] else {
-                    fatalError("Attempting to enrich without a state effect")
-                }
-
-                if let state = state as? S {
-                    var ctx = context
-                    ctx.effects["state"] = f(state)
-                    return ctx
-                } else {
-                    fatalError("State effect was not of the store's state type")
-                }
+        return Interceptor.after(name: "enrich") { context in
+            guard let state = context.effects["state"] else {
+                fatalError("Attempting to enrich without a state effect")
             }
-        )
+            
+            if let state = state as? S {
+                var ctx = context
+                ctx.effects["state"] = f(state)
+                return ctx
+            } else {
+                fatalError("State effect was not of the store's state type")
+            }
+        }
     }
 }
