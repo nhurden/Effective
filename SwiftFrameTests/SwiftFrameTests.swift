@@ -97,7 +97,7 @@ class SwiftFrameTests: XCTestCase {
     func testTodosDeduplicate() {
         let store = todoStore()
 
-        let dedup = store.enrich { state in
+        let dedup = store.enrich(actionClass: AddTodo.self) { state, action in
             let newTodos = Array(Set(state.todos))
             return AppState(todos: newTodos)
         }
