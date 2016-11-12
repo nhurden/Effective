@@ -29,8 +29,8 @@ public protocol Action {
 
 public class Store<S: Equatable> {
     let registry: Registry
-    private(set) var state: Variable<S>
-    private(set) var stateObservable: Observable<S>
+    public private(set) var state: Variable<S>
+    public private(set) var stateObservable: Observable<S>
 
     public init(initialState: S) {
         registry = Registry()
