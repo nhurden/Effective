@@ -94,6 +94,32 @@ class SwiftFrameTests: XCTestCase {
         XCTAssertEqual(actionsAdded, 3)
     }
 
+    // An alternate way to do the above counter example using the `after` interceptor instead of explicit effects
+    func testTodoAfterEffects() {
+        let store = todoStore()
+
+        var actionsAdded = 0
+        let inc = store.after(actionClass: AddTodo.self) { state, action in
+            actionsAdded += 1
+        }
+
+        store.registerEventState(actionClass: AddTodo.self, interceptors: [inc]) { (state, action) in
+            var s = state
+            s.todos.append(action.name)
+            return s
+        }
+
+        store.dispatch(AddTodo(name: "First"))
+        store.dispatch(AddTodo(name: "Second"))
+        store.dispatch(AddTodo(name: "Third"))
+
+        XCTAssert(store.state.value.todos.contains("First"))
+        XCTAssert(store.state.value.todos.contains("Second"))
+        XCTAssert(store.state.value.todos.contains("Third"))
+        XCTAssertEqual(store.state.value.todos.count, 3)
+        XCTAssertEqual(actionsAdded, 3)
+    }
+
     func testTodosDeduplicate() {
         let store = todoStore()
 
