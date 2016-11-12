@@ -48,24 +48,10 @@ extension Store {
     /// An interceptor that runs the function given to update the state after the event handler is run.
     public func enrich<A: Action>(actionClass: A.Type, f: @escaping (S, A) -> S) -> Interceptor {
         return Interceptor.after(name: "enrich") { context in
-            guard let state = context.effects["state"] else {
-                fatalError("Attempting to enrich without a state effect")
-            }
-
-            guard let action = context.coeffects["action"] else {
-                fatalError("Attempting to enrich without an action coeffect")
-            }
-
-            guard let stateS = state as? S else {
-                fatalError("State effect was not of the store's state type")
-            }
-
-            guard let actionA = action as? A else {
-                fatalError("Action coeffect was not of the given action type")
-            }
+            let (s, a) = self.extractStateAndAction(actionClass: actionClass, fromContext: context)
             
             var ctx = context
-            ctx.effects["state"] = f(stateS, actionA)
+            ctx.effects["state"] = f(s, a)
             return ctx
         }
     }
@@ -73,25 +59,29 @@ extension Store {
     /// An interceptor that runs the function given for side effects after the event handler is run.
     public func after<A: Action>(actionClass: A.Type, f: @escaping (S, A) -> Void) -> Interceptor {
         return Interceptor.after(name: "after") { context in
-            guard let state = context.effects["state"] else {
-                fatalError("Attempting to enrich without a state effect")
-            }
-
-            guard let action = context.coeffects["action"] else {
-                fatalError("Attempting to enrich without an action coeffect")
-            }
-
-            guard let stateS = state as? S else {
-                fatalError("State effect was not of the store's state type")
-            }
-
-            guard let actionA = action as? A else {
-                fatalError("Action coeffect was not of the given action type")
-            }
-
-            f(stateS, actionA)
-            
+            let (s, a) = self.extractStateAndAction(actionClass: actionClass, fromContext: context)
+            f(s, a)
             return context
         }
+    }
+
+    private func extractStateAndAction<A: Action>(actionClass: A.Type, fromContext context: Context) -> (S, A) {
+        guard let state = context.effects["state"] else {
+            fatalError("Attempting to enrich without a state effect")
+        }
+        
+        guard let action = context.coeffects["action"] else {
+            fatalError("Attempting to enrich without an action coeffect")
+        }
+        
+        guard let stateS = state as? S else {
+            fatalError("State effect was not of the store's state type")
+        }
+        
+        guard let actionA = action as? A else {
+            fatalError("Action coeffect was not of the given action type")
+        }
+
+        return (stateS, actionA)
     }
 }
