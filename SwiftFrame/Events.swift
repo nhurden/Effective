@@ -21,7 +21,7 @@ extension Store {
                                                          before: stateBeforeUpdater(handler: handler))
 
         let withState = [injectState(), doEffects()] + interceptors + [stateHandlerInterceptor]
-        registry.registerEventHandler(key: actionClass.name, interceptors: withState)
+        registry.registerEventHandler(key: actionClass.typeName, interceptors: withState)
     }
 
     /// Register an event handler that causes effects
@@ -38,7 +38,7 @@ extension Store {
                                                            before: effectsBeforeUpdater(handler: handler))
 
         let withState = [injectState(), doEffects()] + interceptors + [effectsHandlerInterceptor]
-        registry.registerEventHandler(key: actionClass.name, interceptors: withState)
+        registry.registerEventHandler(key: actionClass.typeName, interceptors: withState)
     }
     
     public func registerEventContext<A: Action>(actionClass: A.Type, handler: @escaping EventHandlerContext) {
@@ -54,14 +54,14 @@ extension Store {
                                before: handler)
 
         let withState = [injectState(), doEffects()] + interceptors + [contextHandlerInterceptor]
-        registry.registerEventHandler(key: actionClass.name, interceptors: withState)
+        registry.registerEventHandler(key: actionClass.typeName, interceptors: withState)
     }
 
     public func handleEvent<A: Action>(action: A) {
         if let interceptors = registry.eventHandler(action: action) {
             execute(action: action, interceptors: interceptors)
         } else {
-            let key = type(of: action).name
+            let key = action.typeName
             fatalError("Could not find an event handler for key \(key)")
         }
     }

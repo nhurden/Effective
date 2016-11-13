@@ -12,13 +12,10 @@ import XCTest
 // Todos
 
 struct AddTodo: Action {
-    static var name = "AddTodo"
     let name: String
 }
 
-struct DoNothing: Action {
-    static var name = "DoNothing"
-}
+struct DoNothing: Action {}
 
 struct AppState {
     var todos: [String] = []

@@ -24,7 +24,18 @@ public typealias CoeffectHandler = (CoeffectMap) -> CoeffectMap
 public typealias LoggingFunction = (String) -> ()
 
 public protocol Action {
-    static var name: String { get }
+    var typeName: String { get }
+    static var typeName: String { get }
+}
+
+public extension Action {
+    var typeName: String {
+        return type(of: self).typeName
+    }
+
+    static var typeName: String {
+        return String(describing: self)
+    }
 }
 
 public class Store<S: Equatable> {

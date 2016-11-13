@@ -18,7 +18,7 @@ class Registry {
     }
 
     func eventHandler<A: Action>(action: A) -> [Interceptor]? {
-        let key = type(of: action).name
+        let key = action.typeName
         return eventHandlers[key]
     }
 
