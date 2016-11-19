@@ -207,4 +207,34 @@ class SwiftFrameTests: XCTestCase {
 
         waitForExpectations(timeout: 2.0)
     }
+
+    func testRedispatchMultiple() {
+        let store = todoStore()
+
+        store.registerEventState(actionClass: AddTodo.self) { state, action in
+            var s = state
+            s.todos.append(action.name)
+            return s
+        }
+
+        // Just dispatches AddTodo twice
+        store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
+            let actions = [AddTodo(name: action.name), AddTodo(name: action.name.uppercased())]
+            return [ "dispatchMultiple": actions]
+        }
+
+        store.dispatch(PreAddTodo(name: "First"))
+        store.dispatch(PreAddTodo(name: "Second"))
+        store.dispatch(PreAddTodo(name: "Third"))
+
+        XCTAssert(store.state.value.todos.contains("First"))
+        XCTAssert(store.state.value.todos.contains("Second"))
+        XCTAssert(store.state.value.todos.contains("Third"))
+
+        XCTAssert(store.state.value.todos.contains("FIRST"))
+        XCTAssert(store.state.value.todos.contains("SECOND"))
+        XCTAssert(store.state.value.todos.contains("THIRD"))
+
+        XCTAssertEqual(store.state.value.todos.count, 6)
+    }
 }

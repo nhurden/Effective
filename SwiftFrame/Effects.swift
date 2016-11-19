@@ -39,6 +39,14 @@ extension Store {
                 }
             }
         }
+
+        registerEffect(key: "dispatchMultiple") { actions in
+            if let actions = actions as? [Action] {
+                for action in actions {
+                    self.handleEvent(action: action)
+                }
+            }
+        }
     }
 
     /// An interceptor that does all effects in the effects map by calling registered `EffectHandler`s
