@@ -6,6 +6,11 @@
 //  Copyright © 2016 Nicholas Hurden. All rights reserved.
 //
 
+struct DispatchAfter {
+    let delaySeconds: Double
+    let action: Action
+}
+
 extension Store {
     public func registerEffect(key: String, handler: @escaping EffectHandler) {
         registry.registerEffectHandler(key: key, handler: handler)
@@ -24,6 +29,14 @@ extension Store {
         registerEffect(key: "dispatch") { action in
             if let action = action as? Action {
                 self.handleEvent(action: action)
+            }
+        }
+
+        registerEffect(key: "dispatchAfter") { dispatchAfter in
+            if let dispatchAfter = dispatchAfter as? DispatchAfter {
+                DispatchQueue.main.asyncAfter(deadline: .now() + dispatchAfter.delaySeconds) {
+                    self.handleEvent(action: dispatchAfter.action)
+                }
             }
         }
     }

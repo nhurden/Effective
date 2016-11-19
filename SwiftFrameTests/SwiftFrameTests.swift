@@ -174,4 +174,37 @@ class SwiftFrameTests: XCTestCase {
         XCTAssert(store.state.value.todos.contains("Third"))
         XCTAssertEqual(store.state.value.todos.count, 3)
     }
+
+    func testRedispatchAfter() {
+        let store = todoStore()
+
+        store.registerEventState(actionClass: AddTodo.self) { state, action in
+            var s = state
+            s.todos.append(action.name)
+            return s
+        }
+
+        // Just dispatches AddTodo after a second
+        store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
+            return [ "dispatchAfter": DispatchAfter(delaySeconds: 1.0,
+                                                    action: AddTodo(name: action.name))]
+        }
+
+        store.dispatch(PreAddTodo(name: "First"))
+        store.dispatch(PreAddTodo(name: "Second"))
+        store.dispatch(PreAddTodo(name: "Third"))
+
+        XCTAssertEqual(store.state.value.todos.count, 0)
+
+        let e = expectation(description: "Store is updated later")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            XCTAssert(store.state.value.todos.contains("First"))
+            XCTAssert(store.state.value.todos.contains("Second"))
+            XCTAssert(store.state.value.todos.contains("Third"))
+            XCTAssertEqual(store.state.value.todos.count, 3)
+            e.fulfill()
+        }
+
+        waitForExpectations(timeout: 2.0)
+    }
 }
