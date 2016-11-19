@@ -26,12 +26,14 @@ extension Store {
             }
         }
 
+        // Dispatch a single action.
         registerEffect(key: "dispatch") { action in
             if let action = action as? Action {
                 self.handleEvent(action: action)
             }
         }
 
+        // Dispatch an action after a delay.
         registerEffect(key: "dispatchAfter") { dispatchAfter in
             if let dispatchAfter = dispatchAfter as? DispatchAfter {
                 DispatchQueue.main.asyncAfter(deadline: .now() + dispatchAfter.delaySeconds) {
@@ -40,6 +42,7 @@ extension Store {
             }
         }
 
+        // Dispatch an array of actions.
         registerEffect(key: "dispatchMultiple") { actions in
             if let actions = actions as? [Action] {
                 for action in actions {
