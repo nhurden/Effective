@@ -20,6 +20,12 @@ extension Store {
                 fatalError("Failed to convert state to the store's state type")
             }
         }
+
+        registerEffect(key: "dispatch") { action in
+            if let action = action as? Action {
+                self.handleEvent(action: action)
+            }
+        }
     }
 
     /// An interceptor that does all effects in the effects map by calling registered `EffectHandler`s

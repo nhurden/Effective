@@ -57,7 +57,7 @@ extension Store {
         registry.registerEventHandler(key: actionClass.typeName, interceptors: withState)
     }
 
-    public func handleEvent<A: Action>(action: A) {
+    public func handleEvent(action: Action) {
         if let interceptors = registry.eventHandler(action: action) {
             execute(action: action, interceptors: interceptors)
         } else {

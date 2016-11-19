@@ -17,7 +17,7 @@ class Registry {
         coeffectHandlers = [:]
     }
 
-    func eventHandler<A: Action>(action: A) -> [Interceptor]? {
+    func eventHandler(action: Action) -> [Interceptor]? {
         let key = action.typeName
         return eventHandlers[key]
     }

@@ -15,6 +15,10 @@ struct AddTodo: Action {
     let name: String
 }
 
+struct PreAddTodo: Action {
+    let name: String
+}
+
 struct DoNothing: Action {}
 
 struct AppState {
@@ -140,6 +144,30 @@ class SwiftFrameTests: XCTestCase {
         store.dispatch(AddTodo(name: "First"))
         store.dispatch(AddTodo(name: "Second"))
         store.dispatch(AddTodo(name: "Third"))
+
+        XCTAssert(store.state.value.todos.contains("First"))
+        XCTAssert(store.state.value.todos.contains("Second"))
+        XCTAssert(store.state.value.todos.contains("Third"))
+        XCTAssertEqual(store.state.value.todos.count, 3)
+    }
+
+    func testRedispatch() {
+        let store = todoStore()
+
+        store.registerEventState(actionClass: AddTodo.self) { state, action in
+            var s = state
+            s.todos.append(action.name)
+            return s
+        }
+
+        // Just dispatches AddTodo
+        store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
+            return [ "dispatch": AddTodo(name: action.name)]
+        }
+
+        store.dispatch(PreAddTodo(name: "First"))
+        store.dispatch(PreAddTodo(name: "Second"))
+        store.dispatch(PreAddTodo(name: "Third"))
 
         XCTAssert(store.state.value.todos.contains("First"))
         XCTAssert(store.state.value.todos.contains("Second"))

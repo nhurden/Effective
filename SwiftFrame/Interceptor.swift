@@ -37,7 +37,7 @@ public struct Interceptor {
     - parameter action: The action to inject into the context
     - parameter interceptors: The interceptors to execute
  */
-func execute<A>(action: A, interceptors: [Interceptor]) {
+func execute(action: Action, interceptors: [Interceptor]) {
     var context = Context(coeffects: ["action": action],
                           effects: [:],
                           queue: Queue(items: interceptors),
