@@ -8,12 +8,19 @@
 
 // Some of these interceptors depend on the store's registry and state type parameter
 extension Store {
+    // MARK: Built-in Interceptors
+
+    /// An interceptor that logs actions as they are processed and
+    /// indicates changes to the state made by the event handler.
     public var debug: Interceptor {
         return debug { (str: String) in print(str) }
     }
-    
-    /// An interceptor that logs actions as they are processed and
-    /// indicates changes to the state made by the event handler
+
+    /**
+     An interceptor that logs actions as they are processed and
+     indicates changes to the state made by the event handler.
+     - parameter logFunction: The function to log to.
+     */
     public func debug(logFunction: @escaping LoggingFunction) -> Interceptor {
         return Interceptor(name: "debug", before: { context in
             if let action = context.coeffects["action"] {

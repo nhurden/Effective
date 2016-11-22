@@ -1,0 +1,21 @@
+{
+  "author": "Nicholas Hurden",
+  "author_url": "https://github.com/nhurden/SwiftFrame",
+  "module": "SwiftFrame",
+
+  "custom_categories": [
+    {
+      "name": "Store",
+      "children": [
+        "Store"
+      ]
+    },
+    {
+      "name": "Interceptors",
+      "children": [
+        "Interceptor",
+        "Context"
+      ]
+    }
+  ]
+}

@@ -7,6 +7,8 @@
 //
 
 extension Store {
+    // MARK: Event Handlers
+
     /// Register an event handler that causes a state update and has no side effects
     public func registerEventState<A: Action>(actionClass: A.Type, handler: @escaping EventHandlerState<A, S>) {
         registerEventState(actionClass: actionClass, interceptors: [], handler: handler)
@@ -40,12 +42,14 @@ extension Store {
         let withState = [injectState(), doEffects()] + interceptors + [effectsHandlerInterceptor]
         registry.registerEventHandler(key: actionClass.typeName, interceptors: withState)
     }
-    
-    public func registerEventContext<A: Action>(actionClass: A.Type, handler: @escaping EventHandlerContext) {
+
+    /// Register an event handler that directly updates the context.
+    func registerEventContext<A: Action>(actionClass: A.Type, handler: @escaping EventHandlerContext) {
         registerEventContext(actionClass: actionClass, interceptors: [], handler: handler)
     }
 
-    public func registerEventContext<A: Action>(actionClass: A.Type, interceptors: [Interceptor],
+    /// Register an event handler that directly updates the context.
+    func registerEventContext<A: Action>(actionClass: A.Type, interceptors: [Interceptor],
         handler: @escaping EventHandlerContext) {
         
         /// Wraps an EventHandler in an interceptor that sets the context to the handler's return value
@@ -57,7 +61,8 @@ extension Store {
         registry.registerEventHandler(key: actionClass.typeName, interceptors: withState)
     }
 
-    public func handleEvent(action: Action) {
+    /// Handle an event
+    func handleEvent(action: Action) {
         if let interceptors = registry.eventHandler(action: action) {
             execute(action: action, interceptors: interceptors)
         } else {

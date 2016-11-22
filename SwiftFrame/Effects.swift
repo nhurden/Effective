@@ -6,12 +6,22 @@
 //  Copyright © 2016 Nicholas Hurden. All rights reserved.
 //
 
-struct DispatchAfter {
-    let delaySeconds: Double
-    let action: Action
+/// Used for dispatching actions later.
+public struct DispatchAfter {
+    /// The number of seconds to delay dispatching this action.
+    public let delaySeconds: Double
+
+    /// The action to dispatch after the delay.
+    public let action: Action
 }
 
 extension Store {
+    // MARK: Effect Handlers
+    
+    /**
+     * Register an effect handler for the effect named `key` that executes the
+     * given effect.
+     */
     public func registerEffect(key: String, handler: @escaping EffectHandler) {
         registry.registerEffectHandler(key: key, handler: handler)
     }

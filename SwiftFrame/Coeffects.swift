@@ -7,8 +7,10 @@
 //
 
 extension Store {
-    // Register a coeffect in the case where the name of the coeffect 
-    // is the same as the desired key in the coeffect map
+    // MARK: Coeffect Handlers
+
+    /// Register a coeffect in the case where the name of the coeffect 
+    /// is the same as the desired key in the coeffect map
     public func registerCoeffect(key: String, value: @escaping @autoclosure () -> Any) {
         registerCoeffect(key: key) { coeffects in
             var cofx = coeffects
@@ -17,10 +19,13 @@ extension Store {
         }
     }
 
+    /// Register a coeffect handler for the given key.
+    /// The given key will be used to lookup the coeffect when it is injected with `injectCoeffect`.
     public func registerCoeffect(key: String, handler: @escaping CoeffectHandler) {
         registry.registerCoeffectHandler(key: key, handler: handler)
     }
 
+    /// Register the built-in coeffects. Currently this only includes the `state` coeffect.
     func registerBuiltinCoeffects() {
         // Add the store state to the coeffect map
         registerCoeffect(key: "state", value: self.state.value)
@@ -39,6 +44,7 @@ extension Store {
         }
     }
 
+    /// An interceptor that injects the state coeffect.
     public func injectState() -> Interceptor {
         return injectCoeffect(name: "state")
     }
