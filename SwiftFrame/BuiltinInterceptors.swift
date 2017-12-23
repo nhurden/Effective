@@ -31,19 +31,20 @@ extension Store {
             }, after: { context in
                 let logAfter = { (str: String) in logFunction("  \(str)") }
                 
-                let action = context.coeffects["action"]
                 let oldState = context.coeffects["state"] as? S
                 let newState = context.effects["state"] as? S
-                
-                if let old = oldState, let new = newState {
-                    if old == new {
-                        logAfter("No state changes made by event handler for action: \(action)")
+
+                if let action = context.coeffects["action"] {
+                    if let old = oldState, let new = newState {
+                        if old == new {
+                            logAfter("No state changes made by event handler for action: \(action)")
+                        } else {
+                            logAfter("Old State: \(old)")
+                            logAfter("New State: \(new)")
+                        }
                     } else {
-                        logAfter("Old State: \(old)")
-                        logAfter("New State: \(new)")
+                        logAfter("No state changes made by event handler for action: \(action)")
                     }
-                } else {
-                    logAfter("No state changes made by event handler for action: \(action)")
                 }
                 
                 logAfter("")
