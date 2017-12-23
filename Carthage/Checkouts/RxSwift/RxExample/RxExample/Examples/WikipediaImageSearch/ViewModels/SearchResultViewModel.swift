@@ -1,12 +1,11 @@
 //
 //  SearchResultViewModel.swift
-//  Example
+//  RxExample
 //
 //  Created by Krunoslav Zaher on 4/3/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 #if !RX_NO_MODULE
 import RxSwift
 import RxCocoa
@@ -19,7 +18,7 @@ class SearchResultViewModel {
     var imageURLs: Driver<[URL]>
 
     let API = DefaultWikipediaAPI.sharedAPI
-    let $: Dependencies = Dependencies.sharedDependencies
+    let `$`: Dependencies = Dependencies.sharedDependencies
 
     init(searchResult: WikipediaSearchResult) {
         self.searchResult = searchResult
@@ -45,19 +44,19 @@ class SearchResultViewModel {
             .startWith(loadingValue)
             .map { URLs in
                 if let URLs = URLs {
-                    return "\(searchResult.title) (\(URLs.count)) pictures)"
+                    return "\(searchResult.title) (\(URLs.count) pictures)"
                 }
                 else {
-                    return "\(searchResult.title) loading ..."
+                    return "\(searchResult.title) (loading…)"
                 }
             }
-            .retryOnBecomesReachable("⚠️ Service offline ⚠️", reachabilityService: $.reachabilityService)
+            .retryOnBecomesReachable("⚠️ Service offline ⚠️", reachabilityService: `$`.reachabilityService)
     }
 
     func configureImageURLs() -> Observable<[URL]> {
         let searchResult = self.searchResult
         return API.articleContent(searchResult)
-            .observeOn($.backgroundWorkScheduler)
+            .observeOn(`$`.backgroundWorkScheduler)
             .map { page in
                 do {
                     return try parseImageURLsfromHTMLSuitableForDisplay(page.text as NSString)
@@ -65,5 +64,6 @@ class SearchResultViewModel {
                     return []
                 }
             }
+            .share(replay: 1)
     }
 }

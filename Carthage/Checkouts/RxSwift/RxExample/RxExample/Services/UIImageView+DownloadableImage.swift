@@ -7,27 +7,26 @@
 //
 
 #if os(iOS) || os(tvOS)
-import Foundation
 #if !RX_NO_MODULE
 import RxSwift
 import RxCocoa
 #endif
 import UIKit
 
-extension Reactive where Base: UIImageView{
+extension Reactive where Base: UIImageView {
 
-    var downloadableImage: AnyObserver<DownloadableImage>{
+    var downloadableImage: Binder<DownloadableImage>{
         return downloadableImageAnimated(nil)
     }
 
-    func downloadableImageAnimated(_ transitionType:String?) -> AnyObserver<DownloadableImage> {
-        return UIBindingObserver(UIElement: base as UIImageView) { imageView, image in
+    func downloadableImageAnimated(_ transitionType:String?) -> Binder<DownloadableImage> {
+        return Binder(base) { imageView, image in
             for subview in imageView.subviews {
                 subview.removeFromSuperview()
             }
             switch image {
             case .content(let image):
-                imageView.rx.image.onNext(image)
+                (imageView as UIImageView).rx.image.on(.next(image))
             case .offlinePlaceholder:
                 let label = UILabel(frame: imageView.bounds)
                 label.textAlignment = .center
@@ -35,7 +34,7 @@ extension Reactive where Base: UIImageView{
                 label.text = "⚠️"
                 imageView.addSubview(label)
             }
-        }.asObserver()
+        }
     }
 }
 #endif

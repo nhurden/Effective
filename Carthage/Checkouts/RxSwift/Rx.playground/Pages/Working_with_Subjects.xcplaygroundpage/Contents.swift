@@ -1,7 +1,7 @@
 /*:
  > # IMPORTANT: To use **Rx.playground**:
  1. Open **Rx.xcworkspace**.
- 1. Build the **RxSwift-OSX** scheme (**Product** → **Build**).
+ 1. Build the **RxSwift-macOS** scheme (**Product** → **Build**).
  1. Open **Rx** playground in the **Project navigator**.
  1. Show the Debug Area (**View** → **Debug Area** → **Show Debug Area**).
  ----
@@ -38,11 +38,11 @@ example("PublishSubject") {
     let disposeBag = DisposeBag()
     let subject = PublishSubject<String>()
     
-    subject.addObserver("1").addDisposableTo(disposeBag)
+    subject.addObserver("1").disposed(by: disposeBag)
     subject.onNext("🐶")
     subject.onNext("🐱")
     
-    subject.addObserver("2").addDisposableTo(disposeBag)
+    subject.addObserver("2").disposed(by: disposeBag)
     subject.onNext("🅰️")
     subject.onNext("🅱️")
 }
@@ -57,11 +57,11 @@ example("ReplaySubject") {
     let disposeBag = DisposeBag()
     let subject = ReplaySubject<String>.create(bufferSize: 1)
     
-    subject.addObserver("1").addDisposableTo(disposeBag)
+    subject.addObserver("1").disposed(by: disposeBag)
     subject.onNext("🐶")
     subject.onNext("🐱")
     
-    subject.addObserver("2").addDisposableTo(disposeBag)
+    subject.addObserver("2").disposed(by: disposeBag)
     subject.onNext("🅰️")
     subject.onNext("🅱️")
 }
@@ -75,15 +75,15 @@ example("BehaviorSubject") {
     let disposeBag = DisposeBag()
     let subject = BehaviorSubject(value: "🔴")
     
-    subject.addObserver("1").addDisposableTo(disposeBag)
+    subject.addObserver("1").disposed(by: disposeBag)
     subject.onNext("🐶")
     subject.onNext("🐱")
     
-    subject.addObserver("2").addDisposableTo(disposeBag)
+    subject.addObserver("2").disposed(by: disposeBag)
     subject.onNext("🅰️")
     subject.onNext("🅱️")
     
-    subject.addObserver("3").addDisposableTo(disposeBag)
+    subject.addObserver("3").disposed(by: disposeBag)
     subject.onNext("🍐")
     subject.onNext("🍊")
 }
@@ -97,11 +97,11 @@ example("Variable") {
     let disposeBag = DisposeBag()
     let variable = Variable("🔴")
     
-    variable.asObservable().addObserver("1").addDisposableTo(disposeBag)
+    variable.asObservable().addObserver("1").disposed(by: disposeBag)
     variable.value = "🐶"
     variable.value = "🐱"
     
-    variable.asObservable().addObserver("2").addDisposableTo(disposeBag)
+    variable.asObservable().addObserver("2").disposed(by: disposeBag)
     variable.value = "🅰️"
     variable.value = "🅱️"
 }

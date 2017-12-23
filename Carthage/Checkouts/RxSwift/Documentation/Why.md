@@ -5,9 +5,9 @@
 ### Bindings
 
 ```swift
-Observable.combineLatest(firstName.rx_text, lastName.rx_text) { $0 + " " + $1 }
+Observable.combineLatest(firstName.rx.text, lastName.rx.text) { $0 + " " + $1 }
     .map { "Greetings, \($0)" }
-    .bindTo(greetingLabel.rx_text)
+    .bind(to: greetingLabel.rx.text)
 ```
 
 This also works with `UITableView`s and `UICollectionView`s.
@@ -15,14 +15,14 @@ This also works with `UITableView`s and `UICollectionView`s.
 ```swift
 viewModel
     .rows
-    .bindTo(resultsTableView.rx_itemsWithCellIdentifier("WikipediaSearchCell", cellType: WikipediaSearchCell.self)) { (_, viewModel, cell) in
+    .bind(to: resultsTableView.rx.items(cellIdentifier: "WikipediaSearchCell", cellType: WikipediaSearchCell.self)) { (_, viewModel, cell) in
         cell.title = viewModel.title
         cell.url = viewModel.url
     }
-    .addDisposableTo(disposeBag)
+    .disposed(by: disposeBag)
 ```
 
-**Official suggestion is to always use `.addDisposableTo(disposeBag)` even though that's not necessary for simple bindings.**
+**Official suggestion is to always use `.disposed(by: disposeBag)` even though that's not necessary for simple bindings.**
 
 ### Retries
 
@@ -59,9 +59,9 @@ public func scrollViewDidScroll(scrollView: UIScrollView) { [weak self] // what 
 
 ```swift
 self.resultsTableView
-    .rx_contentOffset
+    .rx.contentOffset
     .map { $0.x }
-    .bindTo(self.leftPositionConstraint.rx_constant)
+    .bind(to: self.leftPositionConstraint.rx.constant)
 ```
 
 ### KVO
@@ -81,25 +81,27 @@ and
                       context:(void *)context
 ```
 
-Use [`rx_observe` and `rx_observeWeakly`](GettingStarted.md#kvo)
+Use [`rx.observe` and `rx.observeWeakly`](GettingStarted.md#kvo)
 
 This is how they can be used:
 
 ```swift
-view.rx_observe(CGRect.self, "frame")
-    .subscribeNext { frame in
+view.rx.observe(CGRect.self, "frame")
+    .subscribe(onNext: { frame in
         print("Got new frame \(frame)")
-    }
+    })
+    .disposed(by: disposeBag)
 ```
 
 or
 
 ```swift
 someSuspiciousViewController
-    .rx_observeWeakly(Bool.self, "behavingOk")
-    .subscribeNext { behavingOk in
+    .rx.observeWeakly(Bool.self, "behavingOk")
+    .subscribe(onNext: { behavingOk in
         print("Cats can purr? \(behavingOk)")
-    }
+    })
+    .disposed(by: disposeBag)
 ```
 
 ### Notifications
@@ -114,9 +116,9 @@ public func addObserverForName(name: String?, object obj: AnyObject?, queue: NSO
 ... just write
 
 ```swift
-NSNotificationCenter.defaultCenter()
-    .rx_notification(UITextViewTextDidBeginEditingNotification, object: myTextView)
-    .map { /*do something with data*/ }
+NotificationCenter.default
+    .rx.notification(NSNotification.Name.UITextViewTextDidBeginEditing, object: myTextView)
+    .map {  /*do something with data*/ }
     ....
 ```
 
@@ -124,7 +126,7 @@ NSNotificationCenter.defaultCenter()
 
 There are also a lot of problems with transient state when writing async programs. A typical example is an autocomplete search box.
 
-If you were to write the autocomplete code without Rx, the first problem that probably needs to be solved is when `c` in `abc` is typed, and there is a pending request for `ab`, the pending request gets cancelled. OK, that shouldn't be too hard to solve, you just create an additional variable to hold reference to the pending request.
+If you were to write the autocomplete code without Rx, the first problem that probably needs to be solved is when `c` in `abc` is typed, and there is a pending request for `ab`, the pending request gets canceled. OK, that shouldn't be too hard to solve, you just create an additional variable to hold reference to the pending request.
 
 The next problem is if the request fails, you need to do that messy retry logic. But OK, a couple more fields that capture the number of retries that need to be cleaned up.
 
@@ -135,7 +137,7 @@ There is also a question of what needs to be shown on screen while that search i
 Writing all of this and properly testing it would be tedious. This is that same logic written with Rx.
 
 ```swift
-searchTextField.rx_text
+searchTextField.rx.text
     .throttle(0.3, scheduler: MainScheduler.instance)
     .distinctUntilChanged()
     .flatMapLatest { query in
@@ -144,9 +146,10 @@ searchTextField.rx_text
             .startWith([]) // clears results on new search term
             .catchErrorJustReturn([])
     }
-    .subscribeNext { results in
+    .subscribe(onNext: { results in
       // bind to ui
-    }
+    })
+    .disposed(by: disposeBag)
 ```
 
 There are no additional flags or fields required. Rx takes care of all that transient mess.
@@ -155,9 +158,9 @@ There are no additional flags or fields required. Rx takes care of all that tran
 
 Let's assume that there is a scenario where you want to display blurred images in a table view. First, the images should be fetched from a URL, then decoded and then blurred.
 
-It would also be nice if that entire process could be cancelled if a cell exits the visible table view area since bandwidth and processor time for blurring are expensive.
+It would also be nice if that entire process could be canceled if a cell exits the visible table view area since bandwidth and processor time for blurring are expensive.
 
-It would also be nice if we didn't just immediately start to fetch an image once the cell enters the visible area since, if user swipes really fast, there could be a lot of requests fired and cancelled.
+It would also be nice if we didn't just immediately start to fetch an image once the cell enters the visible area since, if user swipes really fast, there could be a lot of requests fired and canceled.
 
 It would be also nice if we could limit the number of concurrent image operations because, again, blurring images is an expensive operation.
 
@@ -175,10 +178,10 @@ let imageSubscription = imageURLs
         return decodeAndBlurImage(imageData)
     }
     .observeOn(MainScheduler.instance)
-    .subscribeNext { blurredImage in
+    .subscribe(onNext: { blurredImage in
         imageView.image = blurredImage
-    }
-    .addDisposableTo(reuseDisposeBag)
+    })
+    .disposed(by: reuseDisposeBag)
 ```
 
 This code will do all that and, when `imageSubscription` is disposed, it will cancel all dependent async operations and make sure no rogue image is bound to the UI.
@@ -191,14 +194,15 @@ Well, there is of course the `zip` operator
 
 ```swift
 let userRequest: Observable<User> = API.getUser("me")
-let friendsRequest: Observable<Friends> = API.getFriends("me")
+let friendsRequest: Observable<[Friend]> = API.getFriends("me")
 
 Observable.zip(userRequest, friendsRequest) { user, friends in
     return (user, friends)
 }
-.subscribeNext { user, friends in
+.subscribe(onNext: { user, friends in
     // bind them to the user interface
-}
+})
+.disposed(by: disposeBag)
 ```
 
 So what if those APIs return results on a background thread, and binding has to happen on the main UI thread? There is `observeOn`.
@@ -211,16 +215,17 @@ Observable.zip(userRequest, friendsRequest) { user, friends in
     return (user, friends)
 }
 .observeOn(MainScheduler.instance)
-.subscribeNext { user, friends in
+.subscribe(onNext: { user, friends in
     // bind them to the user interface
-}
+})
+.disposed(by: disposeBag)
 ```
 
 There are many more practical use cases where Rx really shines.
 
 ### State
 
-Languages that allow mutation make it easy to access global state and mutate it. Uncontrolled mutations of shared global state can easily cause [combinatorial explosion] (https://en.wikipedia.org/wiki/Combinatorial_explosion#Computing).
+Languages that allow mutation make it easy to access global state and mutate it. Uncontrolled mutations of shared global state can easily cause [combinatorial explosion](https://en.wikipedia.org/wiki/Combinatorial_explosion#Computing).
 
 But on the other hand, when used in a smart way, imperative languages can enable writing more efficient code closer to hardware.
 
@@ -234,32 +239,31 @@ So what are some practical examples?
 
 ### Easy integration
 
-What if you need to create your own observable? It's pretty easy. This code is taken from RxCocoa and that's all you need to wrap HTTP requests with `NSURLSession`
+What if you need to create your own observable? It's pretty easy. This code is taken from RxCocoa and that's all you need to wrap HTTP requests with `URLSession`
 
 ```swift
-extension NSURLSession {
-    public func rx_response(request: NSURLRequest) -> Observable<(NSData, NSURLResponse)> {
+extension Reactive where Base: URLSession {
+    public func response(request: URLRequest) -> Observable<(Data, HTTPURLResponse)> {
         return Observable.create { observer in
-            let task = self.dataTaskWithRequest(request) { (data, response, error) in
-                guard let response = response, data = data else {
-                    observer.on(.Error(error ?? RxCocoaURLError.Unknown))
+            let task = self.base.dataTask(with: request) { (data, response, error) in
+            
+                guard let response = response, let data = data else {
+                    observer.on(.error(error ?? RxCocoaURLError.unknown))
                     return
                 }
 
-                guard let httpResponse = response as? NSHTTPURLResponse else {
-                    observer.on(.Error(RxCocoaURLError.NonHTTPResponse(response: response)))
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    observer.on(.error(RxCocoaURLError.nonHTTPResponse(response: response)))
                     return
                 }
 
-                observer.on(.Next(data, httpResponse))
-                observer.on(.Completed)
+                observer.on(.next(data, httpResponse))
+                observer.on(.completed)
             }
 
             task.resume()
 
-            return AnonymousDisposable {
-                task.cancel()
-            }
+            return Disposables.create(with: task.cancel)
         }
     }
 }
@@ -287,7 +291,7 @@ Well, all of the Rx operators are based on math and should be intuitive.
 
 The good news is that about 10-15 operators cover most typical use cases. And that list already includes some of the familiar ones like `map`, `filter`, `zip`, `observeOn`, ...
 
-There is a huge list of [all Rx operators](http://reactivex.io/documentation/operators.html) and list of all of the [currently supported RxSwift operators](API.md).
+There is a huge list of [all Rx operators](http://reactivex.io/documentation/operators.html).
 
 For each operator, there is a [marble diagram](http://reactivex.io/documentation/operators/retry.html) that helps to explain how it works.
 

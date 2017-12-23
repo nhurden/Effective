@@ -6,7 +6,6 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 #if !RX_NO_MODULE
 import RxSwift
 import RxCocoa
@@ -91,11 +90,11 @@ class GithubSignupViewModel2 {
         let signingIn = ActivityIndicator()
         self.signingIn = signingIn.asDriver()
 
-        let usernameAndPassword = Driver.combineLatest(input.username, input.password) { ($0, $1) }
+        let usernameAndPassword = Driver.combineLatest(input.username, input.password) { (username: $0, password: $1) }
 
         signedIn = input.loginTaps.withLatestFrom(usernameAndPassword)
-            .flatMapLatest { (username, password) in
-                return API.signup(username, password: password)
+            .flatMapLatest { pair in
+                return API.signup(pair.username, password: pair.password)
                     .trackActivity(signingIn)
                     .asDriver(onErrorJustReturn: false)
             }

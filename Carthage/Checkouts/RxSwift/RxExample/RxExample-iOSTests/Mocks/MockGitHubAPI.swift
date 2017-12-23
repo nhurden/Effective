@@ -6,7 +6,6 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 import RxSwift
 
 class MockGitHubAPI : GitHubAPI {
@@ -15,7 +14,7 @@ class MockGitHubAPI : GitHubAPI {
 
     init(
         usernameAvailable: @escaping (String) -> Observable<Bool> = notImplemented(),
-        signup: @escaping (String, String) -> Observable<Bool> = notImplemented()
+        signup: @escaping ((String, String)) -> Observable<Bool> = notImplemented()
         ) {
         _usernameAvailable = usernameAvailable
         _signup = signup

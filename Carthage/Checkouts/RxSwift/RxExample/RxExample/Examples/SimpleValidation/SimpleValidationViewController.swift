@@ -6,7 +6,6 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 import UIKit
 #if !RX_NO_MODULE
 import RxSwift
@@ -32,36 +31,36 @@ class SimpleValidationViewController : ViewController {
         usernameValidOutlet.text = "Username has to be at least \(minimalUsernameLength) characters"
         passwordValidOutlet.text = "Password has to be at least \(minimalPasswordLength) characters"
 
-        let usernameValid = usernameOutlet.rx.text
+        let usernameValid = usernameOutlet.rx.text.orEmpty
             .map { $0.characters.count >= minimalUsernameLength }
-            .shareReplay(1) // without this map would be executed once for each binding, rx is stateless by default
+            .share(replay: 1) // without this map would be executed once for each binding, rx is stateless by default
 
-        let passwordValid = passwordOutlet.rx.text
+        let passwordValid = passwordOutlet.rx.text.orEmpty
             .map { $0.characters.count >= minimalPasswordLength }
-            .shareReplay(1)
+            .share(replay: 1)
 
         let everythingValid = Observable.combineLatest(usernameValid, passwordValid) { $0 && $1 }
-            .shareReplay(1)
+            .share(replay: 1)
 
         usernameValid
-            .bindTo(passwordOutlet.rx.enabled)
-            .addDisposableTo(disposeBag)
+            .bind(to: passwordOutlet.rx.isEnabled)
+            .disposed(by: disposeBag)
 
         usernameValid
-            .bindTo(usernameValidOutlet.rx.hidden)
-            .addDisposableTo(disposeBag)
+            .bind(to: usernameValidOutlet.rx.isHidden)
+            .disposed(by: disposeBag)
 
         passwordValid
-            .bindTo(passwordValidOutlet.rx.hidden)
-            .addDisposableTo(disposeBag)
+            .bind(to: passwordValidOutlet.rx.isHidden)
+            .disposed(by: disposeBag)
 
         everythingValid
-            .bindTo(doSomethingOutlet.rx.enabled)
-            .addDisposableTo(disposeBag)
+            .bind(to: doSomethingOutlet.rx.isEnabled)
+            .disposed(by: disposeBag)
 
         doSomethingOutlet.rx.tap
-            .subscribe(onNext: { [weak self] in self?.showAlert() })
-            .addDisposableTo(disposeBag)
+            .subscribe(onNext: { [weak self] _ in self?.showAlert() })
+            .disposed(by: disposeBag)
     }
 
     func showAlert() {

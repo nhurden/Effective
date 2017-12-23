@@ -1,12 +1,15 @@
 //
 //  HtmlParsing.swift
-//  Example
+//  RxExample
 //
 //  Created by Krunoslav Zaher on 3/28/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
+import class Foundation.NSString
+import class Foundation.NSRegularExpression
+import func Foundation.NSMakeRange
+import struct Foundation.URL
 
 func parseImageURLsfromHTML(_ html: NSString) throws -> [URL]  {
     let regularExpression = try NSRegularExpression(pattern: "<img[^>]*src=\"([^\"]+)\"[^>]*>", options: [])
@@ -18,7 +21,7 @@ func parseImageURLsfromHTML(_ html: NSString) throws -> [URL]  {
             return nil
         }
         
-        let url = html.substring(with: match.rangeAt(1))
+        let url = html.substring(with: match.range(at: 1))
         
         var absoluteURLString = url
         if url.hasPrefix("//") {

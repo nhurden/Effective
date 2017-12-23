@@ -9,7 +9,7 @@
 extension Store {
     // MARK: Coeffect Handlers
 
-    /// Register a coeffect in the case where the name of the coeffect 
+    /// Register a coeffect in the case where the name of the coeffect
     /// is the same as the desired key in the coeffect map
     public func registerCoeffect(key: String, value: @escaping @autoclosure () -> Any) {
         registerCoeffect(key: key) { coeffects in

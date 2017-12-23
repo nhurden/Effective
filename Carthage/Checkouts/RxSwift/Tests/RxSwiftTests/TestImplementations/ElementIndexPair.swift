@@ -1,12 +1,10 @@
 //
 //  ElementIndexPair.swift
-//  RxTests
+//  Tests
 //
 //  Created by Krunoslav Zaher on 6/12/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
-
-import Foundation
 
 struct ElementIndexPair<E: Equatable, I: Equatable> : Equatable {
     let element: E

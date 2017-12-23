@@ -1,7 +1,7 @@
 /*:
  > # IMPORTANT: To use **Rx.playground**:
  1. Open **Rx.xcworkspace**.
- 1. Build the **RxSwift-OSX** scheme (**Product** → **Build**).
+ 1. Build the **RxSwift-macOS** scheme (**Product** → **Build**).
  1. Open **Rx** playground in the **Project navigator**.
  1. Show the Debug Area (**View** → **Debug Area** → **Show Debug Area**).
  ----
@@ -21,7 +21,7 @@ example("toArray") {
     Observable.range(start: 1, count: 10)
         .toArray()
         .subscribe { print($0) }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
 }
 /*:
  ----
@@ -35,7 +35,7 @@ example("reduce") {
     Observable.of(10, 100, 1000)
         .reduce(1, accumulator: +)
         .subscribe(onNext: { print($0) })
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
 }
 /*:
  ----
@@ -54,7 +54,7 @@ example("concat") {
     variable.asObservable()
         .concat()
         .subscribe { print($0) }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     subject1.onNext("🍐")
     subject1.onNext("🍊")

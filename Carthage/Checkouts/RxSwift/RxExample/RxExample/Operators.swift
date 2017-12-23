@@ -6,7 +6,6 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 #if !RX_NO_MODULE
 import RxSwift
 import RxCocoa
@@ -39,9 +38,9 @@ func nonMarkedText(_ textInput: UITextInput) -> String? {
     return (textInput.text(in: startRange) ?? "") + (textInput.text(in: endRange) ?? "")
 }
 
-func <-> <Base: UITextInput>(textInput: TextInput<Base>, variable: Variable<String>) -> Disposable {
+func <-> <Base>(textInput: TextInput<Base>, variable: Variable<String>) -> Disposable {
     let bindToUIDisposable = variable.asObservable()
-        .bindTo(textInput.text)
+        .bind(to: textInput.text)
     let bindToVariable = textInput.text
         .subscribe(onNext: { [weak base = textInput.base] n in
             guard let base = base else {
@@ -74,16 +73,16 @@ func <-> <Base: UITextInput>(textInput: TextInput<Base>, variable: Variable<Stri
 func <-> <T>(property: ControlProperty<T>, variable: Variable<T>) -> Disposable {
     if T.self == String.self {
 #if DEBUG
-        fatalError("It is ok to delete this message, but this is here to warn that you are maybe trying to bind to some `rx_text` property directly to variable.\n" +
+        fatalError("It is ok to delete this message, but this is here to warn that you are maybe trying to bind to some `rx.text` property directly to variable.\n" +
             "That will usually work ok, but for some languages that use IME, that simplistic method could cause unexpected issues because it will return intermediate results while text is being inputed.\n" +
-            "REMEDY: Just use `textField <-> variable` instead of `textField.rx_text <-> variable`.\n" +
+            "REMEDY: Just use `textField <-> variable` instead of `textField.rx.text <-> variable`.\n" +
             "Find out more here: https://github.com/ReactiveX/RxSwift/issues/649\n"
             )
 #endif
     }
 
     let bindToUIDisposable = variable.asObservable()
-        .bindTo(property)
+        .bind(to: property)
     let bindToVariable = property
         .subscribe(onNext: { n in
             variable.value = n

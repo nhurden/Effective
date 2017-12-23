@@ -1,19 +1,18 @@
 //
 //  Wireframe.swift
-//  Example
+//  RxExample
 //
 //  Created by Krunoslav Zaher on 4/3/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 #if !RX_NO_MODULE
 import RxSwift
 #endif
 
 #if os(iOS)
 import UIKit
-#elseif os(OSX)
+#elseif os(macOS)
 import Cocoa
 #endif
 
@@ -29,13 +28,17 @@ protocol Wireframe {
 
 
 class DefaultWireframe: Wireframe {
-    static let sharedInstance = DefaultWireframe()
+    static let shared = DefaultWireframe()
 
     func open(url: URL) {
         #if os(iOS)
             UIApplication.shared.openURL(url)
-        #elseif os(OSX)
-            NSWorkspace.shared().open(url)
+        #elseif os(macOS)
+            #if swift(>=4.0)
+                NSWorkspace.shared.open(url)
+            #else
+                NSWorkspace.shared.open(url)
+            #endif
         #endif
     }
 
@@ -75,7 +78,7 @@ class DefaultWireframe: Wireframe {
                 alertView.dismiss(animated:false, completion: nil)
             }
         }
-        #elseif os(OSX)
+        #elseif os(macOS)
             return Observable.error(NSError(domain: "Unimplemented", code: -1, userInfo: nil))
         #endif
     }

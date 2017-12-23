@@ -1,12 +1,13 @@
 //
 //  WikipediaPage.swift
-//  Example
+//  RxExample
 //
 //  Created by Krunoslav Zaher on 3/28/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
+import class Foundation.NSDictionary
+
 #if !RX_NO_MODULE
 import RxSwift
 #endif
@@ -14,11 +15,6 @@ import RxSwift
 struct WikipediaPage {
     let title: String
     let text: String
-    
-    init(title: String, text: String) {
-        self.title = title
-        self.text = text
-    }
     
     // tedious parsing part
     static func parseJSON(_ json: NSDictionary) throws -> WikipediaPage {

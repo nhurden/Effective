@@ -6,7 +6,6 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 import UIKit
 #if !RX_NO_MODULE
 import RxSwift
@@ -49,10 +48,10 @@ extension ValidationResult {
 }
 
 extension Reactive where Base: UILabel {
-    var validationResult: AnyObserver<ValidationResult> {
-        return UIBindingObserver(UIElement: base) { label, result in
+    var validationResult: Binder<ValidationResult> {
+        return Binder(base) { label, result in
             label.textColor = result.textColor
             label.text = result.description
-        }.asObserver()
+        }
     }
 }

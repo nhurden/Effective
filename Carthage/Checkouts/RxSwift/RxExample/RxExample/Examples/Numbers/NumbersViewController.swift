@@ -6,7 +6,6 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 import UIKit
 #if !RX_NO_MODULE
 import RxSwift
@@ -23,11 +22,11 @@ class NumbersViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        Observable.combineLatest(number1.rx.text, number2.rx.text, number3.rx.text) { textValue1, textValue2, textValue3 -> Int in
+        Observable.combineLatest(number1.rx.text.orEmpty, number2.rx.text.orEmpty, number3.rx.text.orEmpty) { textValue1, textValue2, textValue3 -> Int in
                 return (Int(textValue1) ?? 0) + (Int(textValue2) ?? 0) + (Int(textValue3) ?? 0)
             }
             .map { $0.description }
-            .bindTo(result.rx.text)
-            .addDisposableTo(disposeBag)
+            .bind(to: result.rx.text)
+            .disposed(by: disposeBag)
     }
 }

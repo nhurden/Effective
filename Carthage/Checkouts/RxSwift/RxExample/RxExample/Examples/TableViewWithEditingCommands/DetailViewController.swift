@@ -15,7 +15,7 @@ class DetailViewController: ViewController {
     
     var user: User!
     
-    let $ = Dependencies.sharedDependencies
+    let `$` = Dependencies.sharedDependencies
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var label: UILabel!
@@ -28,13 +28,14 @@ class DetailViewController: ViewController {
         let url = URL(string: user.imageURL)!
         let request = URLRequest(url: url)
         
-        URLSession.shared.rx.data(request)
+        URLSession.shared.rx.data(request: request)
             .map { data in
                 UIImage(data: data)
             }
-            .observeOn($.mainScheduler)
+            .observeOn(`$`.mainScheduler)
+            .catchErrorJustReturn(nil)
             .subscribe(imageView.rx.image)
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
         
         label.text = user.firstName + " " + user.lastName
     }

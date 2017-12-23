@@ -1,16 +1,16 @@
 //
 //  CLLocationManager+RxTests.swift
-//  RxTests
+//  RxExample
 //
 //  Created by Krunoslav Zaher on 12/13/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 import RxSwift
 import RxCocoa
 import XCTest
 import CoreLocation
+import RxExample_iOS
 
 class CLLocationManagerTests : RxTest {
 
@@ -44,13 +44,13 @@ extension CLLocationManagerTests {
 
     func testDidFailWithError() {
         var completed = false
-        var error: NSError?
+        var error: Error?
 
         autoreleasepool {
             let manager = CLLocationManager()
             
             _ = manager.rx.didFailWithError.subscribe(onNext: { e in
-                error = e
+                    error = e
                 }, onCompleted: {
                     completed = true
                 })
@@ -58,21 +58,21 @@ extension CLLocationManagerTests {
             manager.delegate!.locationManager!(manager, didFailWithError: testError)
         }
 
-        XCTAssertEqual(error, testError)
+        XCTAssertEqual(error! as NSError, testError)
         XCTAssertTrue(completed)
     }
 
-    #if os(iOS) || os(OSX)
+    #if os(iOS) || os(macOS)
 
     func testDidFinishDeferredUpdatesWithError() {
         var completed = false
-        var error: NSError?
+        var error: Error?
 
         autoreleasepool {
             let manager = CLLocationManager()
 
             _ = manager.rx.didFinishDeferredUpdatesWithError.subscribe(onNext: { e in
-                error = e
+                    error = e
                 }, onCompleted: {
                     completed = true
             })
@@ -80,13 +80,13 @@ extension CLLocationManagerTests {
             manager.delegate!.locationManager!(manager, didFinishDeferredUpdatesWithError: testError)
         }
 
-        XCTAssertEqual(error, testError)
+        XCTAssertEqual(error! as NSError, testError)
         XCTAssertTrue(completed)
     }
 
     func testDidFinishDeferredUpdatesWithError_noError() {
         var completed = false
-        var error: NSError?
+        var error: Error?
 
         autoreleasepool {
             let manager = CLLocationManager()
@@ -100,7 +100,7 @@ extension CLLocationManagerTests {
             manager.delegate!.locationManager!(manager, didFinishDeferredUpdatesWithError: nil)
         }
 
-        XCTAssertEqual(error, nil)
+        XCTAssertEqual(error.map { $0 as NSError }, nil)
         XCTAssertTrue(completed)
     }
 
@@ -216,7 +216,7 @@ extension CLLocationManagerTests {
 
     #endif
 
-    #if os(iOS) || os(OSX)
+    #if os(iOS) || os(macOS)
 
     func testDidDetermineStateForRegion() {
         var completed = false
@@ -244,7 +244,7 @@ extension CLLocationManagerTests {
     func testMonitorOfKnownRegionDidFailWithError() {
         var completed = false
         var region: CLRegion?
-        var error: NSError?
+        var error: Error?
 
         let targetRegion = CLCircularRegion(center: CLLocationCoordinate2D(latitude: 90, longitude: 180), radius: 10, identifier: "unit tests in cloud")
 
@@ -262,14 +262,14 @@ extension CLLocationManagerTests {
         }
 
         XCTAssertEqual(targetRegion, region)
-        XCTAssertEqual(error, testError)
+        XCTAssertEqual(error! as NSError, testError)
         XCTAssertTrue(completed)
     }
 
     func testMonitorOfUnknownRegionDidFailWithError() {
         var completed = false
         var region: CLRegion?
-        var error: NSError?
+        var error: Error?
 
         let targetRegion: CLRegion? = nil
 
@@ -277,17 +277,17 @@ extension CLLocationManagerTests {
             let manager = CLLocationManager()
 
             _ = manager.rx.monitoringDidFailForRegionWithError.subscribe(onNext: { l in
-                region = l.region
-                error = l.error
+                    region = l.region
+                    error = l.error
                 }, onCompleted: {
                     completed = true
-            })
+                })
 
             manager.delegate!.locationManager!(manager, monitoringDidFailFor: targetRegion, withError: testError)
         }
 
         XCTAssertEqual(targetRegion, region)
-        XCTAssertEqual(error, testError)
+        XCTAssertEqual(error! as NSError, testError)
         XCTAssertTrue(completed)
     }
 
@@ -349,7 +349,7 @@ extension CLLocationManagerTests {
 
     func testRangingBeaconsDidFailForRegionWithError() {
         var completed = false
-        var value: (CLBeaconRegion, NSError)?
+        var value: (CLBeaconRegion, Error)?
 
         let targetValue = (
             CLBeaconRegion(proximityUUID: UUID(uuidString: "68753A44-4D6F-1226-9C60-0050E4C00067")!, identifier: "1231231"),
@@ -369,7 +369,7 @@ extension CLLocationManagerTests {
         }
 
         XCTAssertEqual(value!.0, targetValue.0)
-        XCTAssertEqual(value!.1, targetValue.1)
+        XCTAssertEqual(value!.1 as NSError, targetValue.1)
         XCTAssertTrue(completed)
     }
 

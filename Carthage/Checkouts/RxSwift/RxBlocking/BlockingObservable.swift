@@ -1,12 +1,11 @@
 //
 //  BlockingObservable.swift
-//  Rx
+//  RxBlocking
 //
 //  Created by Krunoslav Zaher on 10/19/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
 #if !RX_NO_MODULE
     import RxSwift
 #endif

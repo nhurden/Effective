@@ -1,6 +1,6 @@
 //
 //  UIImagePickerController+RxTests.swift
-//  Rx
+//  RxExample
 //
 //  Created by Segii Shulga on 1/6/16.
 //  Copyright © 2016 Krunoslav Zaher. All rights reserved.
@@ -10,11 +10,11 @@
 
 #if os(iOS)
     
-import Foundation
 import RxSwift
 import RxCocoa
 import XCTest
 import UIKit
+import RxExample_iOS
 
 class UIImagePickerControllerTests: RxTest {
     

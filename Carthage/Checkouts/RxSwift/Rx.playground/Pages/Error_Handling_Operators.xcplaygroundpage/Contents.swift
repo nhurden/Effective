@@ -1,7 +1,7 @@
 /*:
  > # IMPORTANT: To use **Rx.playground**:
  1. Open **Rx.xcworkspace**.
- 1. Build the **RxSwift-OSX** scheme (**Product** → **Build**).
+ 1. Build the **RxSwift-macOS** scheme (**Product** → **Build**).
  1. Open **Rx** playground in the **Project navigator**.
  1. Show the Debug Area (**View** → **Debug Area** → **Show Debug Area**).
  ----
@@ -23,7 +23,7 @@ example("catchErrorJustReturn") {
     sequenceThatFails
         .catchErrorJustReturn("😊")
         .subscribe { print($0) }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     sequenceThatFails.onNext("😬")
     sequenceThatFails.onNext("😨")
@@ -49,7 +49,7 @@ example("catchError") {
             return recoverySequence
         }
         .subscribe { print($0) }
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
     
     sequenceThatFails.onNext("😬")
     sequenceThatFails.onNext("😨")
@@ -91,7 +91,7 @@ example("retry") {
     sequenceThatErrors
         .retry()
         .subscribe(onNext: { print($0) })
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
 }
 /*:
  ----
@@ -125,7 +125,7 @@ example("retry maxAttemptCount") {
     sequenceThatErrors
         .retry(3)
         .subscribe(onNext: { print($0) })
-        .addDisposableTo(disposeBag)
+        .disposed(by: disposeBag)
 }
 
 //: [Next](@next) - [Table of Contents](Table_of_Contents)

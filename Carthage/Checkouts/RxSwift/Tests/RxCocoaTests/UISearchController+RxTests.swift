@@ -1,6 +1,6 @@
 //
 //  UISearchController+RxTests.swift
-//  Rx
+//  Tests
 //
 //  Created by Segii Shulga on 3/17/16.
 //  Copyright © 2016 Krunoslav Zaher. All rights reserved.
@@ -8,13 +8,12 @@
 
 #if os(iOS)
     
-import Foundation
 import RxSwift
 import RxCocoa
 import XCTest
 import UIKit
 
-class UISearchController_RxTests: RxTest {
+final class UISearchController_RxTests: RxTest {
     
     func testDidDismissSearchController() {
         var completed = false
@@ -24,7 +23,7 @@ class UISearchController_RxTests: RxTest {
             let searchController = UISearchController()
             
             _ = searchController.rx.didDismiss
-                .subscribe(onNext: {
+                .subscribe(onNext: { _ in
                         didDismissed = true
                     }, onCompleted: {
                         completed = true
@@ -44,7 +43,7 @@ class UISearchController_RxTests: RxTest {
             let searchController = UISearchController()
             
             _ = searchController.rx.didPresent
-                .subscribe(onNext: {
+                .subscribe(onNext: { _ in
                     didPresent = true
                     }, onCompleted: {
                         completed = true
@@ -64,7 +63,7 @@ class UISearchController_RxTests: RxTest {
             let searchController = UISearchController()
             
             _ = searchController.rx.present
-                .subscribe(onNext: {
+                .subscribe(onNext: { _ in
                     presented = true
                     }, onCompleted: {
                         completed = true
@@ -84,7 +83,7 @@ class UISearchController_RxTests: RxTest {
             let searchController = UISearchController()
             
             _ = searchController.rx.willDismiss
-                .subscribe(onNext: {
+                .subscribe(onNext: { _ in
                     willDismiss = true
                     }, onCompleted: {
                         completed = true
@@ -104,7 +103,7 @@ class UISearchController_RxTests: RxTest {
             let searchController = UISearchController()
             
             _ = searchController.rx.willPresent
-                .subscribe(onNext: {
+                .subscribe(onNext: { _ in
                     willPresent = true
                     }, onCompleted: {
                         completed = true
