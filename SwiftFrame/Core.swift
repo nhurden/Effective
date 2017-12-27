@@ -7,6 +7,7 @@
 //
 
 import RxSwift
+import RxCocoa
 
 public typealias StringMap = [String: Any]
 public typealias EffectMap = StringMap
@@ -50,10 +51,10 @@ public class Store<S: Equatable> {
     let registry: Registry
 
     /// The current state of the store as an RxSwift `Variable`.
-    public private(set) var state: Variable<S>
+    private(set) var state: Variable<S>
 
     /// On observable of the current state of the store.
-    public private(set) var stateObservable: Observable<S>
+    public private(set) var stateObservable: Driver<S>
 
     /// Create a new store.
     /// - parameter initialState: The initial state of this store.
@@ -61,7 +62,7 @@ public class Store<S: Equatable> {
         registry = Registry()
         state = Variable(initialState)
         
-        stateObservable = state.asObservable().distinctUntilChanged()
+        stateObservable = state.asDriver().distinctUntilChanged()
 
         registerBuiltinCoeffects()
         registerBuiltinEffects()
