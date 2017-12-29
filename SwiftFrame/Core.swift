@@ -9,19 +9,36 @@
 import RxSwift
 import RxCocoa
 
+/// A string keyed map
 public typealias StringMap = [String: Any]
+
+/// A map of effects, used in the context
 public typealias EffectMap = StringMap
+
+/// A map of coeffects, used in the context
 public typealias CoeffectMap = StringMap
 
+/// A function that updates the context
 public typealias ContextUpdater = (Context) -> Context
 
+/// A reducer function that is specialised to one specific `Action`
+/// and updates the state without performing effects
 public typealias EventHandlerState<A, S> = (S, A) -> S
+
+/// A reducer function that is specialised to one specific `Action` and performs effects
 public typealias EventHandlerEffects<A> = (CoeffectMap, A) -> EffectMap
+
+/// A reducer function that is specialised to one specific `Action`
+/// and performs arbitrary context changes
 public typealias EventHandlerContext = ContextUpdater
 
+/// A function that handles effects by being passed the value stored in the effects map
 public typealias EffectHandler = (Any) -> ()
+
+/// A function that injects coeffects by adding to the coeffect map
 public typealias CoeffectHandler = (CoeffectMap) -> CoeffectMap
 
+/// A function that receives logging output
 public typealias LoggingFunction = (String) -> ()
 
 /// A marker protocol for all actions.
