@@ -14,7 +14,8 @@ Pod::Spec.new do |s|
   s.platform     = :osx, '10.10'
   s.requires_arc = true
 
-  s.dependency 'RxSwift'
+  s.dependency 'RxSwift', '~> 4.0'
+  s.dependency 'RxCocoa', '~> 4.0'
 
   s.source_files  = "SwiftFrame/*.{swift}"
 end
