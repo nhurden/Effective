@@ -17,7 +17,7 @@ public struct DispatchAfter {
 
 extension Store {
     // MARK: Effect Handlers
-    
+
     /**
      * Register an effect handler for the effect named `key` that executes the
      * given effect.

@@ -7,9 +7,9 @@
 //
 
 class Registry {
-    fileprivate var eventHandlers: [String : [Interceptor]]
-    fileprivate var effectHandlers: [String : EffectHandler]
-    fileprivate var coeffectHandlers: [String : CoeffectHandler]
+    fileprivate var eventHandlers: [String: [Interceptor]]
+    fileprivate var effectHandlers: [String: EffectHandler]
+    fileprivate var coeffectHandlers: [String: CoeffectHandler]
 
     init() {
         eventHandlers = [:]

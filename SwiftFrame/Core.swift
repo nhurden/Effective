@@ -33,13 +33,13 @@ public typealias EventHandlerEffects<A> = (CoeffectMap, A) -> EffectMap
 public typealias EventHandlerContext = ContextUpdater
 
 /// A function that handles effects by being passed the value stored in the effects map
-public typealias EffectHandler = (Any) -> ()
+public typealias EffectHandler = (Any) -> Void
 
 /// A function that injects coeffects by adding to the coeffect map
 public typealias CoeffectHandler = (CoeffectMap) -> CoeffectMap
 
 /// A function that receives logging output
-public typealias LoggingFunction = (String) -> ()
+public typealias LoggingFunction = (String) -> Void
 
 /// A marker protocol for all actions.
 /// `typeName` has a default implementation and does not need to be implemented.
@@ -78,7 +78,7 @@ public class Store<S: Equatable> {
     public init(initialState: S) {
         registry = Registry()
         state = Variable(initialState)
-        
+
         stateObservable = state.asDriver().distinctUntilChanged()
 
         registerBuiltinCoeffects()

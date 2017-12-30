@@ -20,7 +20,9 @@ extension Store {
         interceptors: [Interceptor],
         handler: @escaping EventHandlerState<A, S>) {
 
-        registerEventContext(actionClass: actionClass, interceptors: interceptors, handler: stateBeforeUpdater(handler: handler))
+        registerEventContext(actionClass: actionClass,
+                             interceptors: interceptors,
+                             handler: stateBeforeUpdater(handler: handler))
     }
 
     /// Register an event handler that causes effects
@@ -67,13 +69,13 @@ extension Store {
             fatalError("Could not find an event handler for key \(key)")
         }
     }
-    
+
     private func stateBeforeUpdater<A, S>(handler: @escaping EventHandlerState<A, S>) -> ContextUpdater {
-        return effectsBeforeUpdater() { (coeffects, action: A) in
+        return effectsBeforeUpdater { (coeffects, action: A) in
             guard let state = coeffects["state"] else {
                 fatalError("Attempting to call an event handler that expects state with no state in the coeffect map")
             }
-            
+
             if let state = state as? S {
                 return ["state": handler(state, action)]
             } else {

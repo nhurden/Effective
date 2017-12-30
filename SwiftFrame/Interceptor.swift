@@ -30,7 +30,7 @@ public struct Interceptor {
 
     /// The function to run before the event handler.
     public let before: ContextUpdater?
-    
+
     /// The function to run after the event handler.
     public let after: ContextUpdater?
 
@@ -62,7 +62,7 @@ func execute(action: Action, interceptors: [Interceptor]) {
 
     func invoke(interceptorFunction: (Interceptor) -> ContextUpdater?) -> Context {
         var context = context
-        while (context.queue.nonEmpty) {
+        while context.queue.nonEmpty {
             if let interceptor = context.queue.peek {
                 context.queue.dequeue()
                 context.stack.push(interceptor)
