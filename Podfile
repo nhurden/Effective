@@ -13,6 +13,7 @@ target 'SwiftFrame' do
   target 'SwiftFrameTests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'RxTest', '~> 4.0'
   end
 
 end
