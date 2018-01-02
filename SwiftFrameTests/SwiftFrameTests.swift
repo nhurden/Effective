@@ -19,8 +19,21 @@ struct AddTodo: Action {
     let name: String
 }
 
+struct AddTodos: Action {
+    let name: String
+}
+
+struct AddTodoAndIncrement: Action {
+    let name: String
+}
+
 struct PreAddTodo: Action {
     let name: String
+}
+
+struct AddTodoLater: Action {
+    let name: String
+    let delay: TimeInterval
 }
 
 struct DoNothing: Action {}
@@ -35,6 +48,22 @@ func ==(lhs: AppState, rhs: AppState) -> Bool {
     return lhs.todos == rhs.todos
 }
 
+func todoStore() -> Store<AppState> {
+    let store = Store(initialState: AppState())
+
+    store.registerEventState(actionClass: DoNothing.self) { (state, action) in
+        state
+    }
+
+    store.registerEventState(actionClass: AddTodo.self) { (state, action) in
+        var s = state
+        s.todos.append(action.name)
+        return s
+    }
+
+    return store
+}
+
 // Counter
 
 struct CounterState {
@@ -47,24 +76,8 @@ func ==(lhs: CounterState, rhs: CounterState) -> Bool {
 }
 
 class SwiftFrameTests: XCTestCase {
-    func todoStore() -> Store<AppState> {
-        let store = Store(initialState: AppState())
-
-        store.registerEventState(actionClass: DoNothing.self) { (state, action) in
-            state
-        }
-        
-        return store
-    }
-
     func testTodoSimple() {
         let store = todoStore()
-
-        store.registerEventState(actionClass: AddTodo.self) { (state, action) in
-            var s = state
-            s.todos.append(action.name)
-            return s
-        }
 
         store.dispatch(AddTodo(name: "Do Stuff"))
         store.dispatch(DoNothing())
@@ -77,22 +90,22 @@ class SwiftFrameTests: XCTestCase {
     func testTodoEffects() {
         let store = todoStore()
 
-        enum CounterAction {
+        enum CounterEffect {
             case increment
         }
 
-        store.registerEventEffects(actionClass: AddTodo.self) { (coeffects, action) in
+        store.registerEventEffects(actionClass: AddTodoAndIncrement.self) { (coeffects, action) in
             let state = coeffects["state"] as? AppState
             var newState = state ?? AppState()
             newState.todos.append(action.name)
 
-            return [ "counter": CounterAction.increment,
+            return [ "counter": CounterEffect.increment,
                      "state": newState ]
         }
 
         var actionsAdded = 0
         store.registerEffect(key: "counter") { action in
-            if let action = action as? CounterAction {
+            if let action = action as? CounterEffect {
                 switch action {
                 case .increment:
                     actionsAdded += 1
@@ -100,9 +113,9 @@ class SwiftFrameTests: XCTestCase {
             }
         }
 
-        store.dispatch(AddTodo(name: "First"))
-        store.dispatch(AddTodo(name: "Second"))
-        store.dispatch(AddTodo(name: "Third"))
+        store.dispatch(AddTodoAndIncrement(name: "First"))
+        store.dispatch(AddTodoAndIncrement(name: "Second"))
+        store.dispatch(AddTodoAndIncrement(name: "Third"))
 
         XCTAssert(store.state.value.todos.contains("First"))
         XCTAssert(store.state.value.todos.contains("Second"))
@@ -111,7 +124,8 @@ class SwiftFrameTests: XCTestCase {
         XCTAssertEqual(actionsAdded, 3)
     }
 
-    // An alternate way to do the above counter example using the `after` interceptor instead of explicit effects
+    // An alternate way to do the above counter example using the `after` interceptor
+    // instead of explicit effects and a new action type
     func testTodoAfterEffects() {
         let store = todoStore()
 
@@ -170,12 +184,6 @@ class SwiftFrameTests: XCTestCase {
     func testRedispatch() {
         let store = todoStore()
 
-        store.registerEventState(actionClass: AddTodo.self) { state, action in
-            var s = state
-            s.todos.append(action.name)
-            return s
-        }
-
         // Just dispatches AddTodo
         store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
             return [ "dispatch": AddTodo(name: action.name)]
@@ -194,26 +202,19 @@ class SwiftFrameTests: XCTestCase {
     func testRedispatchAfter() {
         let store = todoStore()
 
-        store.registerEventState(actionClass: AddTodo.self) { state, action in
-            var s = state
-            s.todos.append(action.name)
-            return s
-        }
-
-        // Just dispatches AddTodo after a second
-        store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
-            return [ "dispatchAfter": DispatchAfter(delaySeconds: 1.0,
+        store.registerEventEffects(actionClass: AddTodoLater.self) { coeffects, action in
+            return [ "dispatchAfter": DispatchAfter(delaySeconds: action.delay,
                                                     action: AddTodo(name: action.name))]
         }
 
-        store.dispatch(PreAddTodo(name: "First"))
-        store.dispatch(PreAddTodo(name: "Second"))
-        store.dispatch(PreAddTodo(name: "Third"))
+        store.dispatch(AddTodoLater(name: "First", delay: 0.1))
+        store.dispatch(AddTodoLater(name: "Second", delay: 0.2))
+        store.dispatch(AddTodoLater(name: "Third", delay: 0.3))
 
         XCTAssertEqual(store.state.value.todos.count, 0)
 
         let e = expectation(description: "Store is updated later")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             XCTAssert(store.state.value.todos.contains("First"))
             XCTAssert(store.state.value.todos.contains("Second"))
             XCTAssert(store.state.value.todos.contains("Third"))
@@ -221,27 +222,21 @@ class SwiftFrameTests: XCTestCase {
             e.fulfill()
         }
 
-        waitForExpectations(timeout: 2.0)
+        waitForExpectations(timeout: 1.0)
     }
 
     func testRedispatchMultiple() {
         let store = todoStore()
 
-        store.registerEventState(actionClass: AddTodo.self) { state, action in
-            var s = state
-            s.todos.append(action.name)
-            return s
-        }
-
         // Just dispatches AddTodo twice
-        store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
+        store.registerEventEffects(actionClass: AddTodos.self) { coeffects, action in
             let actions = [AddTodo(name: action.name), AddTodo(name: action.name.uppercased())]
             return [ "dispatchMultiple": actions]
         }
 
-        store.dispatch(PreAddTodo(name: "First"))
-        store.dispatch(PreAddTodo(name: "Second"))
-        store.dispatch(PreAddTodo(name: "Third"))
+        store.dispatch(AddTodos(name: "First"))
+        store.dispatch(AddTodos(name: "Second"))
+        store.dispatch(AddTodos(name: "Third"))
 
         XCTAssert(store.state.value.todos.contains("First"))
         XCTAssert(store.state.value.todos.contains("Second"))
@@ -300,12 +295,6 @@ class SwiftFrameTests: XCTestCase {
     func testObservingKeyPathsWithArrayT() {
         // Store Setup
         let store = todoStore()
-
-        store.registerEventState(actionClass: AddTodo.self) { state, action in
-            var s = state
-            s.todos.append(action.name)
-            return s
-        }
 
         // Test Setup
         let scheduler = TestScheduler(initialClock: 0)
