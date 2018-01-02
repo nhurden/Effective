@@ -85,6 +85,13 @@ public class Store<S: Equatable> {
         registerBuiltinEffects()
     }
 
+    /// Observe a projection of the store by applying `keyPath`
+    /// - parameter keyPath: The keypath to apply to the state
+    /// - parameter comparer: A function to test whether two elements of the projected type are equal for the purposes of distinctUntilChanged
+    public func observe<T>(keyPath: KeyPath<S, T>, comparer: @escaping (T, T) -> Bool) -> Driver<T> {
+        return stateObservable.map { $0[keyPath: keyPath] }.distinctUntilChanged(comparer)
+    }
+
     /**
      Dispatch an action for processing.
      - parameter action: The action to process

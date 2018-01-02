@@ -44,7 +44,7 @@ class SwiftFrameTests: XCTestCase {
         
         return store
     }
-    
+
     func testTodoSimple() {
         let store = todoStore()
 
@@ -240,5 +240,48 @@ class SwiftFrameTests: XCTestCase {
         XCTAssert(store.state.value.todos.contains("THIRD"))
 
         XCTAssertEqual(store.state.value.todos.count, 6)
+    }
+
+    // Array is a special case because it is not Equatable
+    func testObservingKeyPathsWithArrayT() {
+        // Store Setup
+        let store = todoStore()
+
+        store.registerEventState(actionClass: AddTodo.self) { state, action in
+            var s = state
+            s.todos.append(action.name)
+            return s
+        }
+
+        // Test Setup
+        let scheduler = TestScheduler(initialClock: 0)
+        let observer = scheduler.createObserver([String].self)
+        let disposeBag = DisposeBag()
+
+        // Replaces: let todos = store.stateObservable.asObservable().map { $0.todos }.distinctUntilChanged(==)
+        let todos: Driver<[String]> = store.observe(keyPath: \.todos, comparer: ==)
+        let threeTodosExpectation = expectation(description: "Three todos")
+
+        todos.drive(onNext: { ts in
+            if ts.count == 3 {
+                threeTodosExpectation.fulfill()
+            }
+        }).disposed(by: disposeBag)
+
+        todos.drive(observer)
+            .disposed(by: disposeBag)
+
+        // Tests
+        store.dispatch(AddTodo(name: "First"))
+        store.dispatch(AddTodo(name: "Second"))
+        store.dispatch(AddTodo(name: "Third"))
+
+        waitForExpectations(timeout: 1.0) { (error) in
+            XCTAssertEqual(observer.events.count, 4) // initial + 3 changes
+            XCTAssertEqual(observer.events[0].value.element!, [])
+            XCTAssertEqual(observer.events[1].value.element!, ["First"])
+            XCTAssertEqual(observer.events[2].value.element!, ["First", "Second"])
+            XCTAssertEqual(observer.events[3].value.element!, ["First", "Second", "Third"])
+        }
     }
 }
