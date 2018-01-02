@@ -87,7 +87,15 @@ public class Store<S: Equatable> {
 
     /// Observe a projection of the store by applying `keyPath`
     /// - parameter keyPath: The keypath to apply to the state
-    /// - parameter comparer: A function to test whether two elements of the projected type are equal for the purposes of distinctUntilChanged
+    public func observe<T: Equatable>(keyPath: KeyPath<S, T>) -> Driver<T> {
+        return stateObservable.map { $0[keyPath: keyPath] }.distinctUntilChanged()
+    }
+
+    /// Observe a projection of the store by applying `keyPath`
+    /// This variant is useful for observing arrays, which are not `Equatable`
+    /// - parameter keyPath: The keypath to apply to the state
+    /// - parameter comparer: A function to test whether two elements of the projected type are equal
+    /// for the purposes of distinctUntilChanged
     public func observe<T>(keyPath: KeyPath<S, T>, comparer: @escaping (T, T) -> Bool) -> Driver<T> {
         return stateObservable.map { $0[keyPath: keyPath] }.distinctUntilChanged(comparer)
     }

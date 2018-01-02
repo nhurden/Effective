@@ -24,6 +24,7 @@ struct PreAddTodo: Action {
 }
 
 struct DoNothing: Action {}
+struct Increment: Action {}
 
 struct AppState {
     var todos: [String] = []
@@ -32,6 +33,17 @@ extension AppState: Equatable {}
 
 func ==(lhs: AppState, rhs: AppState) -> Bool {
     return lhs.todos == rhs.todos
+}
+
+// Counter
+
+struct CounterState {
+    var count: Int = 0
+}
+extension CounterState: Equatable {}
+
+func ==(lhs: CounterState, rhs: CounterState) -> Bool {
+    return lhs.count == rhs.count
 }
 
 class SwiftFrameTests: XCTestCase {
@@ -240,6 +252,48 @@ class SwiftFrameTests: XCTestCase {
         XCTAssert(store.state.value.todos.contains("THIRD"))
 
         XCTAssertEqual(store.state.value.todos.count, 6)
+    }
+
+    // When equatable, there is no need to supply a comparer function
+    func testObservingKeyPathsWithEquatable() {
+        // Store Setup
+        let store = Store(initialState: CounterState())
+
+        store.registerEventState(actionClass: Increment.self) { state, action in
+            var s = state
+            s.count += 1
+            return s
+        }
+
+        // Test Setup
+        let scheduler = TestScheduler(initialClock: 0)
+        let observer = scheduler.createObserver(Int.self)
+        let disposeBag = DisposeBag()
+
+        let count: Driver<Int> = store.observe(keyPath: \.count)
+        let countExpectation = expectation(description: "count of 3")
+
+        count.drive(onNext: { c in
+            if c == 3 {
+                countExpectation.fulfill()
+            }
+        }).disposed(by: disposeBag)
+
+        count.drive(observer)
+            .disposed(by: disposeBag)
+
+        // Tests
+        store.dispatch(Increment())
+        store.dispatch(Increment())
+        store.dispatch(Increment())
+
+        waitForExpectations(timeout: 1.0) { (error) in
+            XCTAssertEqual(observer.events.count, 4) // initial + 3 changes
+            XCTAssertEqual(observer.events[0].value.element!, 0)
+            XCTAssertEqual(observer.events[1].value.element!, 1)
+            XCTAssertEqual(observer.events[2].value.element!, 2)
+            XCTAssertEqual(observer.events[3].value.element!, 3)
+        }
     }
 
     // Array is a special case because it is not Equatable
