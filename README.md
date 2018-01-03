@@ -125,9 +125,60 @@ store.registerEventEffects(actionClass: AddTodoAndIncrement.self) { (coeffects, 
 
 ### Built-in Effects
 #### `dispatch`
-#### `dispatchLater`
+The `dispatch` effect simply dispatches its argument immediately:
+
+```swift
+// Dispatches AddTodo immediately
+store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
+    return [ "dispatch": AddTodo(name: action.name)]
+}
+```
+
+#### `dispatchAfter`
+The `dispatchAfter` effect dispatches its action after a delay:
+
+```swift
+// Dispatches AddTodo after a delay
+store.registerEventEffects(actionClass: AddTodoLater.self) { coeffects, action in
+    return [ "dispatchAfter": DispatchAfter(delaySeconds: action.delay,
+                                            action: AddTodo(name: action.name))]
+}
+```
+
 #### `dispatchMultiple`
+The `dispatchMultiple` effect dispatches multiple actions immediately:
+
+```swift
+// Dispatches AddTodo twice
+store.registerEventEffects(actionClass: AddTodos.self) { coeffects, action in
+    let actions = [AddTodo(name: action.name), AddTodo(name: action.name.uppercased())]
+    return [ "dispatchMultiple": actions]
+}
+```
+
+
 #### `state`
+The `state` effect replaces the store's state with its argument:
+
+```swift
+// `state` as effect
+store.registerEventEffects(actionClass: AddTodo.self) { (coeffects, action) in
+    let state = coeffects["state"] as? AppState
+    var newState = state ?? AppState()
+    newState.todos.append(action.name)
+
+    return [ "state": newState ]
+}
+
+// `state` is implied:
+store.registerEventState(actionClass: AddTodo.self) { (state, action) in
+    var s = state
+    s.todos.append(action.name)
+    return s
+}
+```
+
+This is done implicitly when using `registerEventState` but needs to be done explicitly when using `registerEventEffects`.
 
 ## Interceptors
 
@@ -174,13 +225,6 @@ store.dispatch(Increment()) // => Handling action: Increment():
                             //      Old State: 1
                             //      New State: 2
 ```
-
-## Best practices
-### Sub-stores
-
-### Keep actions minimal
-- Use dispatch effects to refactor actions into smaller actions:
-
 
 ## Installation
 ### CocoaPods
