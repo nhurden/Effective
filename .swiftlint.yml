@@ -5,12 +5,10 @@ disabled_rules:
   - variable_name
   - cyclomatic_complexity
 included:
-  - SwiftFrame
+  - Effective
+  - EffectiveTests
 excluded:
-  - Carthage
   - Pods
-  - Source/ExcludedFolder
-  - Source/ExcludedFile.swift
 
 force_cast: warning # implicitly
 force_try:

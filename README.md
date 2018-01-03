@@ -1,5 +1,5 @@
 # Effective
-A Swift state container library with extensible effects.
+A Swift state container library with extensible effects, modelled after [re-frame][rf].
 
 ## Table of Contents
 - [Features](#features)
@@ -9,12 +9,11 @@ A Swift state container library with extensible effects.
 - [Installation](#installation)
 
 ## Features
-- [RxSwift][Rx] observables for observation of store changes
+- [RxSwift][Rx] for observation of store changes
 - Immutable store state
 - Isolation of effects within effects handlers, keeping event handlers pure and allowing for effect reuse
 - A flexible context and [interceptor][int] based execution model that allows for
 individual actions to be extended (rather than the entire store)
-- No monolithic reducer or middleware
 
 ## Basic Usage
 ### 1. Define your app state:
@@ -113,7 +112,7 @@ The values for each key are the `EffectMap` are passed to the effect handler
 for the corresponding key (in this case `"counter"` is passed `CounterEffect.increment`).
 
 ```swift
-store.registerEventEffects(actionClass: AddTodoAndIncrement.self) { (coeffects, action) in
+store.registerEventEffects(actionClass: AddTodoAndIncrement.self) { coeffects, action in
     let state = coeffects["state"] as? AppState
     var newState = state ?? AppState()
     newState.todos.append(action.name)
@@ -162,7 +161,7 @@ The `state` effect replaces the store's state with its argument:
 
 ```swift
 // `state` as effect
-store.registerEventEffects(actionClass: AddTodo.self) { (coeffects, action) in
+store.registerEventEffects(actionClass: AddTodo.self) { coeffects, action in
     let state = coeffects["state"] as? AppState
     var newState = state ?? AppState()
     newState.todos.append(action.name)
@@ -171,7 +170,7 @@ store.registerEventEffects(actionClass: AddTodo.self) { (coeffects, action) in
 }
 
 // `state` is implied:
-store.registerEventState(actionClass: AddTodo.self) { (state, action) in
+store.registerEventState(actionClass: AddTodo.self) { state, action in
     var s = state
     s.todos.append(action.name)
     return s
@@ -193,7 +192,7 @@ let dedup = store.enrich(actionClass: AddTodo.self) { state, action in
     return AppState(todos: newTodos)
 }
 
-store.registerEventState(actionClass: AddTodo.self, interceptors: [dedup]) { (state, action) in
+store.registerEventState(actionClass: AddTodo.self, interceptors: [dedup]) { state, action in
     var s = state
     s.todos.append(action.name)
     return s
@@ -210,7 +209,7 @@ let inc = store.after(actionClass: AddTodo.self) { state, action in
     actionsAdded += 1
 }
 
-store.registerEventState(actionClass: AddTodo.self, interceptors: [inc]) { (state, action) in
+store.registerEventState(actionClass: AddTodo.self, interceptors: [inc]) { state, action in
     var s = state
     s.todos.append(action.name)
     return s
