@@ -10,7 +10,9 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/nhurden/Effective.git", :tag => "#{s.version}" }
 
-  s.platform     = :osx, '10.10'
+  s.ios.deployment_target = '8.0'
+  s.osx.deployment_target = '10.10'
+
   s.requires_arc = true
 
   s.dependency 'RxSwift', '~> 4.0'
