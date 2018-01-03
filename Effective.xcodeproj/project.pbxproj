@@ -12,7 +12,7 @@
 		B2BC4E0B921C70A7BAB8E4DB /* Pods_Effective_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E96E1D6EEF17FA8E85698A /* Pods_Effective_macOS.framework */; };
 		BF_105224033259 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_300207783866 /* Events.swift */; };
 		BF_136227952029 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_790644379924 /* Queue.swift */; };
-		BF_161392935079 /* EffectiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_220793140291 /* EffectiveTests.swift */; };
+		BF_161392935079 /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_220793140291 /* StoreTests.swift */; };
 		BF_167303641364 /* BuiltinInterceptors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_760232073559 /* BuiltinInterceptors.swift */; };
 		BF_247563660349 /* Coeffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_719172841368 /* Coeffects.swift */; };
 		BF_299025690421 /* BuiltinInterceptors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_760232073559 /* BuiltinInterceptors.swift */; };
@@ -29,10 +29,12 @@
 		BF_757169628858 /* Effective.h in Headers */ = {isa = PBXBuildFile; fileRef = FR_845174449851 /* Effective.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BF_823942016257 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_127151587966 /* Core.swift */; };
 		BF_832384684573 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_902335592753 /* Effects.swift */; };
-		BF_834376122337 /* EffectiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_220793140291 /* EffectiveTests.swift */; };
+		BF_834376122337 /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_220793140291 /* StoreTests.swift */; };
 		BF_881420849393 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = FR_331306155612 /* Stack.swift */; };
 		BF_917255095128 /* Effective.h in Headers */ = {isa = PBXBuildFile; fileRef = FR_845174449851 /* Effective.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D575BACA784597FD6CA842A7 /* Pods_EffectiveTests_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154FEC4563A2DBD0B07AC58E /* Pods_EffectiveTests_iOS.framework */; };
+		E17A38C41FFC615F0089BC15 /* InterceptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17A38C31FFC615F0089BC15 /* InterceptorTests.swift */; };
+		E17A38C51FFC615F0089BC15 /* InterceptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17A38C31FFC615F0089BC15 /* InterceptorTests.swift */; };
 		E182A4E01FFC57E000B5AE04 /* Effective.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FR_674436420936 /* Effective.framework */; };
 		E182A4E11FFC57E800B5AE04 /* Effective.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FR_791528735150 /* Effective.framework */; };
 /* End PBXBuildFile section */
@@ -65,11 +67,12 @@
 		9EAAB700BB1DCE3F718E28B1 /* Pods-Effective_macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Effective_macOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Effective_macOS/Pods-Effective_macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		A636A0B539D7159C84842151 /* Pods-Effective_macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Effective_macOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-Effective_macOS/Pods-Effective_macOS.release.xcconfig"; sourceTree = "<group>"; };
 		D2E96E1D6EEF17FA8E85698A /* Pods_Effective_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Effective_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E17A38C31FFC615F0089BC15 /* InterceptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterceptorTests.swift; sourceTree = "<group>"; };
 		E7AD2C6EA42F785F805B08DF /* Pods-EffectiveTests_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EffectiveTests_iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-EffectiveTests_iOS/Pods-EffectiveTests_iOS.release.xcconfig"; sourceTree = "<group>"; };
 		E97F850A49E7813B843EDD8E /* Pods-EffectiveTests_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EffectiveTests_iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EffectiveTests_iOS/Pods-EffectiveTests_iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		FR_127151587966 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		FR_194232762639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FR_220793140291 /* EffectiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectiveTests.swift; sourceTree = "<group>"; };
+		FR_220793140291 /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		FR_272940995295 /* EffectiveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EffectiveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FR_300207783866 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		FR_331306155612 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
@@ -156,14 +159,14 @@
 				FR_760232073559 /* BuiltinInterceptors.swift */,
 				FR_719172841368 /* Coeffects.swift */,
 				FR_127151587966 /* Core.swift */,
-				FR_845174449851 /* Effective.h */,
 				FR_902335592753 /* Effects.swift */,
 				FR_300207783866 /* Events.swift */,
-				FR_194232762639 /* Info.plist */,
 				FR_655106110406 /* Interceptor.swift */,
 				FR_790644379924 /* Queue.swift */,
 				FR_867024248913 /* Registry.swift */,
 				FR_331306155612 /* Stack.swift */,
+				FR_845174449851 /* Effective.h */,
+				FR_194232762639 /* Info.plist */,
 			);
 			path = Effective;
 			sourceTree = "<group>";
@@ -171,7 +174,8 @@
 		G_7182810806608 /* EffectiveTests */ = {
 			isa = PBXGroup;
 			children = (
-				FR_220793140291 /* EffectiveTests.swift */,
+				FR_220793140291 /* StoreTests.swift */,
+				E17A38C31FFC615F0089BC15 /* InterceptorTests.swift */,
 				FR_783780342239 /* Info.plist */,
 			);
 			path = EffectiveTests;
@@ -511,7 +515,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF_161392935079 /* EffectiveTests.swift in Sources */,
+				BF_161392935079 /* StoreTests.swift in Sources */,
+				E17A38C41FFC615F0089BC15 /* InterceptorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,7 +540,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF_834376122337 /* EffectiveTests.swift in Sources */,
+				BF_834376122337 /* StoreTests.swift in Sources */,
+				E17A38C51FFC615F0089BC15 /* InterceptorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

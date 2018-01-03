@@ -1,6 +1,6 @@
 //
-//  EffectiveTests.swift
-//  EffectiveTests
+//  StoreTests.swift
+//  StoreTests
 //
 //  Created by Nicholas Hurden on 3/10/2016.
 //  Copyright © 2016 Nicholas Hurden. All rights reserved.
@@ -75,7 +75,7 @@ func ==(lhs: CounterState, rhs: CounterState) -> Bool {
     return lhs.count == rhs.count
 }
 
-class EffectiveTests: XCTestCase {
+class StoreTests: XCTestCase {
     func testTodoSimple() {
         let store = todoStore()
 
