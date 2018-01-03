@@ -112,6 +112,8 @@ The values for each key are the `EffectMap` are passed to the effect handler
 for the corresponding key (in this case `"counter"` is passed `CounterEffect.increment`).
 
 ```swift
+struct AddTodoAndIncrement: Action { … }
+
 store.registerEventEffects(actionClass: AddTodoAndIncrement.self) { coeffects, action in
     let state = coeffects["state"] as? AppState
     var newState = state ?? AppState()
@@ -127,6 +129,8 @@ store.registerEventEffects(actionClass: AddTodoAndIncrement.self) { coeffects, a
 The `dispatch` effect simply dispatches its argument immediately:
 
 ```swift
+struct PreAddTodo: Action { … }
+
 // Dispatches AddTodo immediately
 store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
     return [ "dispatch": AddTodo(name: action.name)]
@@ -137,6 +141,8 @@ store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
 The `dispatchAfter` effect dispatches its action after a delay:
 
 ```swift
+struct AddTodoLater: Action { … }
+
 // Dispatches AddTodo after a delay
 store.registerEventEffects(actionClass: AddTodoLater.self) { coeffects, action in
     return [ "dispatchAfter": DispatchAfter(delaySeconds: action.delay,
@@ -148,6 +154,8 @@ store.registerEventEffects(actionClass: AddTodoLater.self) { coeffects, action i
 The `dispatchMultiple` effect dispatches multiple actions immediately:
 
 ```swift
+struct AddTodos: Action { … }
+
 // Dispatches AddTodo twice
 store.registerEventEffects(actionClass: AddTodos.self) { coeffects, action in
     let actions = [AddTodo(name: action.name), AddTodo(name: action.name.uppercased())]
