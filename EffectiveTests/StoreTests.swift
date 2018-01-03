@@ -327,4 +327,33 @@ class StoreTests: XCTestCase {
             XCTAssertEqual(observer.events[3].value.element!, ["First", "Second", "Third"])
         }
     }
+
+    func testCoeffectInjection() {
+        let store = todoStore()
+
+        store.registerCoeffect(key: "time", value: NSDate(timeIntervalSince1970: 0))
+
+        let injectTime = store.injectCoeffect(name: "time")
+
+        store.registerEventEffects(actionClass: AddTodo.self, interceptors: [injectTime]) { coeffects, action in
+            let state = coeffects["state"] as? AppState
+            var newState = state ?? AppState()
+
+            let time = coeffects["time"] as? NSDate
+            let todoName = String(describing: time) + " " + action.name
+            newState.todos.append(todoName)
+
+            return [ "state": newState ]
+        }
+
+        store.dispatch(AddTodo(name: "First"))
+        store.dispatch(AddTodo(name: "Second"))
+        store.dispatch(AddTodo(name: "Third"))
+
+        let todos = store.state.value.todos
+        let prefix = String(describing: NSDate(timeIntervalSince1970: 0) as NSDate?)
+        XCTAssertEqual(todos[0], prefix + " First")
+        XCTAssertEqual(todos[1], prefix + " Second")
+        XCTAssertEqual(todos[2], prefix + " Third")
+    }
 }

@@ -9,8 +9,7 @@
 extension Store {
     // MARK: Coeffect Handlers
 
-    /// Register a coeffect in the case where the name of the coeffect
-    /// is the same as the desired key in the coeffect map
+    /// Register a coeffect handler for the given key.
     public func registerCoeffect(key: String, value: @escaping @autoclosure () -> Any) {
         registerCoeffect(key: key) { coeffects in
             var cofx = coeffects
