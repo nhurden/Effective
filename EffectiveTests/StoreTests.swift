@@ -44,18 +44,18 @@ struct AppState {
 }
 extension AppState: Equatable {}
 
-func ==(lhs: AppState, rhs: AppState) -> Bool {
+func == (lhs: AppState, rhs: AppState) -> Bool {
     return lhs.todos == rhs.todos
 }
 
 func todoStore() -> Store<AppState> {
     let store = Store(initialState: AppState())
 
-    store.registerEventState(actionClass: DoNothing.self) { (state, action) in
+    store.registerEventState(actionClass: DoNothing.self) { state, _ in
         state
     }
 
-    store.registerEventState(actionClass: AddTodo.self) { (state, action) in
+    store.registerEventState(actionClass: AddTodo.self) { state, action in
         var s = state
         s.todos.append(action.name)
         return s
@@ -71,7 +71,7 @@ struct CounterState {
 }
 extension CounterState: Equatable {}
 
-func ==(lhs: CounterState, rhs: CounterState) -> Bool {
+func == (lhs: CounterState, rhs: CounterState) -> Bool {
     return lhs.count == rhs.count
 }
 
@@ -87,14 +87,14 @@ class StoreTests: XCTestCase {
         XCTAssertEqual(store.state.value.todos.count, 2)
     }
 
+    enum CounterEffect {
+        case increment
+    }
+
     func testTodoEffects() {
         let store = todoStore()
 
-        enum CounterEffect {
-            case increment
-        }
-
-        store.registerEventEffects(actionClass: AddTodoAndIncrement.self) { (coeffects, action) in
+        store.registerEventEffects(actionClass: AddTodoAndIncrement.self) { coeffects, action in
             let state = coeffects["state"] as? AppState
             var newState = state ?? AppState()
             newState.todos.append(action.name)
@@ -130,11 +130,11 @@ class StoreTests: XCTestCase {
         let store = todoStore()
 
         var actionsAdded = 0
-        let inc = store.after(actionClass: AddTodo.self) { state, action in
+        let inc = store.after(actionClass: AddTodo.self) { _, _ in
             actionsAdded += 1
         }
 
-        store.registerEventState(actionClass: AddTodo.self, interceptors: [inc]) { (state, action) in
+        store.registerEventState(actionClass: AddTodo.self, interceptors: [inc]) { state, action in
             var s = state
             s.todos.append(action.name)
             return s
@@ -154,12 +154,12 @@ class StoreTests: XCTestCase {
     func testTodosDeduplicate() {
         let store = todoStore()
 
-        let dedup = store.enrich(actionClass: AddTodo.self) { state, action in
+        let dedup = store.enrich(actionClass: AddTodo.self) { state, _ in
             let newTodos = Array(Set(state.todos))
             return AppState(todos: newTodos)
         }
-        
-        store.registerEventState(actionClass: AddTodo.self, interceptors: [dedup]) { (state, action) in
+
+        store.registerEventState(actionClass: AddTodo.self, interceptors: [dedup]) { state, action in
             var s = state
             s.todos.append(action.name)
             return s
@@ -185,7 +185,7 @@ class StoreTests: XCTestCase {
         let store = todoStore()
 
         // Just dispatches AddTodo
-        store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
+        store.registerEventEffects(actionClass: PreAddTodo.self) { _, action in
             return [ "dispatch": AddTodo(name: action.name)]
         }
 
@@ -202,7 +202,7 @@ class StoreTests: XCTestCase {
     func testRedispatchAfter() {
         let store = todoStore()
 
-        store.registerEventEffects(actionClass: AddTodoLater.self) { coeffects, action in
+        store.registerEventEffects(actionClass: AddTodoLater.self) { _, action in
             return [ "dispatchAfter": DispatchAfter(delaySeconds: action.delay,
                                                     action: AddTodo(name: action.name))]
         }
@@ -229,7 +229,7 @@ class StoreTests: XCTestCase {
         let store = todoStore()
 
         // Just dispatches AddTodo twice
-        store.registerEventEffects(actionClass: AddTodos.self) { coeffects, action in
+        store.registerEventEffects(actionClass: AddTodos.self) { _, action in
             let actions = [AddTodo(name: action.name), AddTodo(name: action.name.uppercased())]
             return [ "dispatchMultiple": actions]
         }
@@ -254,7 +254,7 @@ class StoreTests: XCTestCase {
         // Store Setup
         let store = Store(initialState: CounterState())
 
-        store.registerEventState(actionClass: Increment.self) { state, action in
+        store.registerEventState(actionClass: Increment.self) { state, _ in
             var s = state
             s.count += 1
             return s
@@ -282,7 +282,7 @@ class StoreTests: XCTestCase {
         store.dispatch(Increment())
         store.dispatch(Increment())
 
-        waitForExpectations(timeout: 1.0) { (error) in
+        waitForExpectations(timeout: 1.0) { _ in
             XCTAssertEqual(observer.events.count, 4) // initial + 3 changes
             XCTAssertEqual(observer.events[0].value.element!, 0)
             XCTAssertEqual(observer.events[1].value.element!, 1)
@@ -319,7 +319,7 @@ class StoreTests: XCTestCase {
         store.dispatch(AddTodo(name: "Second"))
         store.dispatch(AddTodo(name: "Third"))
 
-        waitForExpectations(timeout: 1.0) { (error) in
+        waitForExpectations(timeout: 1.0) { _ in
             XCTAssertEqual(observer.events.count, 4) // initial + 3 changes
             XCTAssertEqual(observer.events[0].value.element!, [])
             XCTAssertEqual(observer.events[1].value.element!, ["First"])
