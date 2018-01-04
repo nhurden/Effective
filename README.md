@@ -5,6 +5,7 @@ A Swift state container library with extensible effects, modelled after [re-fram
 - [Features](#features)
 - [Basic Usage](#basic-usage)
 - [Effects](#effects)
+- [Coeffects](#coeffects)
 - [Interceptors](#interceptors)
 - [Installation](#installation)
 
@@ -31,7 +32,7 @@ writing your event handlers less cumbersome_
 ```swift
 extension AppState: Equatable {}
 
-func ==(lhs: AppState, rhs: AppState) -> Bool {
+func == (lhs: AppState, rhs: AppState) -> Bool {
     return lhs.todos == rhs.todos
 }
 ```
@@ -186,6 +187,31 @@ store.registerEventState(actionClass: AddTodo.self) { state, action in
 ```
 
 This is done implicitly when using `registerEventState` but needs to be done explicitly when using `registerEventEffects`.
+
+## Coeffects
+Just as effect handlers handle the _outputs_ of event handlers, coeffect handlers handle the _inputs_ to event handlers.
+Coeffects injected by `registerCoeffect` are available within event handlers registered with `registerEventEffects`:
+
+```swift
+// 1. Register the value for the coeffect (with a value or closure)
+store.registerCoeffect(key: "time", value: NSDate(timeIntervalSince1970: 0))
+
+// 2. Create an interceptor to inject the coeffect
+let injectTime = store.injectCoeffect(name: "time")
+
+// 3. Add the interceptor to the event handler
+store.registerEventEffects(actionClass: AddTodo.self, interceptors: [injectTime]) { coeffects, action in
+    let state = coeffects["state"] as? AppState
+    var newState = state ?? AppState()
+
+    // 4. Extract the coeffect in the event handler
+    let time = coeffects["time"] as? NSDate
+    let todoName = String(describing: time) + " " + action.name
+    newState.todos.append(todoName)
+
+    return [ "state": newState ]
+}
+```
 
 ## Interceptors
 
