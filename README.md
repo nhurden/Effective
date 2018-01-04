@@ -62,7 +62,7 @@ store.registerEventState(actionClass: AddTodo.self) { (state, action) in
 }
 ```
 
-_Note that since `state` is immutable, `state` is first copied to `s` to make a copy._
+_Note that since `state` is immutable, `state` is first copied to `s`._
 
 ### 5. Observe the store:
 Specific keypaths can be observed from the store using `store.observe`:
@@ -78,6 +78,14 @@ store.dispatch(AddTodo(name: "Dispatch more actions"))
 ```
 
 ## Effects
+Event handlers should avoid having side-effects, both for ease of testing and
+for isolation of individual effects.
+
+Event handlers that perform side-effects should be registered using `registerEventEffects`
+rather than `registerEventState` and return an `EffectMap` (see below) rather than a
+new state. By returning descriptions of effects rather than executing them, event
+handlers can be kept pure and effects can be easily stubbed out for testing by calling `registerEffect`.
+
 ### Using Effects
 #### 1a. Register a type to describe your effect (optional)
 ```swift
@@ -139,7 +147,7 @@ store.registerEventEffects(actionClass: PreAddTodo.self) { coeffects, action in
 ```
 
 #### `dispatchAfter`
-The `dispatchAfter` effect dispatches its action after a delay:
+The `dispatchAfter` effect dispatches its action after a delay, specified by a `DispatchAfter`:
 
 ```swift
 struct AddTodoLater: Action { … }
@@ -194,7 +202,7 @@ Coeffects injected by `registerCoeffect` are available within event handlers reg
 
 ```swift
 // 1. Register the value for the coeffect (with a value or closure)
-store.registerCoeffect(key: "time", value: NSDate(timeIntervalSince1970: 0))
+store.registerCoeffect(key: "time", value: NSDate())
 
 // 2. Create an interceptor to inject the coeffect
 let injectTime = store.injectCoeffect(name: "time")
@@ -212,6 +220,9 @@ store.registerEventEffects(actionClass: AddTodo.self, interceptors: [injectTime]
     return [ "state": newState ]
 }
 ```
+
+By injecting inputs to event handlers through coeffects, individual coeffects can be replaced
+for testing by calling `registerCoeffect` with a stub handler implementation.
 
 ## Interceptors
 
